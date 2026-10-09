@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio projects by Laura Ngo">
+  <title>Projects — Laura Ngo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="projects.css">
+</head>
+
+<body>
+  <nav class="projects-nav">
+    <div class="nav-right">
+      <a href="../index.html" class="back-link">← BACK TO HOME</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light mode"
+        title="Switch to light mode" aria-pressed="false">
+        <span class="sun">☼</span>
+        <span class="moon">☾</span>
+      </button>
+    </div>
+  </nav>
+  <main>
+    <header class="projects-header">
+      <div>
+        <h1>Projects <span id="projectCount">(4)</span></h1>
+        <p>Selected projects spanning data analysis, machine learning, visualization, and applied research.</p>
+      </div>
+    </header>
+
+    <section class="overview">
+      <div class="overview-copy">
+        <span class="section-label">PROJECT DISTRIBUTION</span>
+        <h2>Projects by year</h2>
+        <p id="chartSummary"></p>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-wrap">
+          <div class="year-pie" id="yearChart" role="img"></div>
+        </div>
+
+        <div class="chart-legend" id="chartLegend"></div>
+      </div>
+    </section>
+
+    <section class="project-tools" aria-label="Project filters">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="projectSearch" type="search" placeholder="Search projects" aria-label="Search projects">
+      </div>
+
+      <div class="year-filter" id="yearFilter" aria-label="Filter projects by year">
+        <button class="year-btn active" data-year="all" type="button">ALL</button>
+      </div>
+    </section>
+
+    <section class="projects-section" aria-label="Project archive">
+      <div class="results-bar">
+        <span id="resultsCount">4 PROJECTS</span>
+        <span id="activeFilter">ALL YEARS</span>
+      </div>
+
+      <div class="project-grid" id="projectGrid">
+        <article class="project-card" data-year="2026" data-title="Steam Player Retention">
+          <div class="project-image">
+            <img src="/images/steam.jpg" alt="Steam Player Retention project visualization">
+            <span class="image-number">01</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2026</span>
+              <span>GRADUATE CAPSTONE</span>
+            </div>
+            <h2>Steam Player Retention</h2>
+            <p>
+              An end-to-end machine learning project analyzing Steam player behavior
+              and retention. The project combines large-scale behavioral data,
+              feature engineering, exploratory analysis, and predictive modeling
+              to identify patterns associated with player churn and continued engagement.
+            </p>
+            <a class="project-link" href="https://lngo916.github.io/DSC-288R-Steam-Player-Retention-CTRLFREAKS/"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2026" data-title="Amazon Review Rating Prediction">
+          <div class="project-image">
+            <img src="/images/amazon.png" alt="Amazon Review Rating Prediction project visualization">
+            <span class="image-number">02</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2026</span>
+              <span>MACHINE LEARNING</span>
+            </div>
+            <h2>Amazon Review Prediction</h2>
+            <p>
+              A large-scale review classification project focused on predicting
+              Amazon star ratings from review text and behavioral signals.
+              The analysis explores feature engineering, class imbalance,
+              model performance, and the differences between standard and PCA-based
+              feature representations.
+            </p>
+            <a class="project-link" href="https://lngo916.github.io/DSC-232R-Amazon-Reviews/" target="_blank"
+              rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2026" data-title="Flood Risk & Mitigation">
+          <div class="project-image">
+            <img src="/images/flood.png" alt="Flood Risk & Mitigation">
+            <span class="image-number">03</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2026</span>
+              <span>ENVIRONMENTAL DATA PLANNING</span>
+            </div>
+            <h2>Flood Risk & Mitigation</h2>
+            <p>
+              An environmental data analysis using monitoring data to examine flood risk, retention planning,
+              ethical recommendations, monitoring proposals, and mitigation planning.
+
+            </p>
+            <a class="project-link"
+              href="dsc267.pdf"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2025" data-title="Earthquake Monitoring">
+          <div class="project-image">
+            <img src="/images/earthquake.png" alt="Earthquake Monitoring project visualization">
+            <span class="image-number">04</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2025</span>
+              <span>GEOSPATIAL DATA</span>
+            </div>
+            <h2>Earthquake Monitoring</h2>
+            <p>
+              An interactive geospatial visualization of earthquake activity,
+              designed to make geographic patterns, magnitude, and event
+              distribution easier to explore. The project turns earthquake
+              records into an accessible visual monitoring experience.
+            </p>
+            <a class="project-link" href="https://lngo916.github.io/DSC-209R-Bang-Sing-Se/" target="_blank"
+              rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Biking in Boston">
+          <div class="project-image">
+            <img src="/images/biking.avif" alt="Biking in Boston">
+            <span class="image-number">05</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>GEOSPATIAL DATA</span>
+            </div>
+            <h2>Biking in Boston</h2>
+            <p>
+              An interactive geospatial data visualization exploring bike activity patterns across Boston using
+              Bluebikes trip data. The project incorporates station-level traffic flows through departures and
+              arrivals, with time-based filtering to reveal how bike activity changes throughout the day.
+            </p>
+            <a class="project-link" href="https://lngo916.github.io/DSC-209R-Biking-In-Boston/"
+              aria-label="Biking in Boston">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Amazon Review Rating Prediction">
+          <div class="project-image">
+            <img src="/images/legends.png" alt="Amazon Review Rating Prediction project visualization">
+            <span class="image-number">06</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>GAME ANALYTICS</span>
+            </div>
+            <h2>Mobile Legends: Team Composition
+            </h2>
+            <p>
+              An interactive data visualization exploring team composition in Mobile Legends: Bang Bang using
+              professional gameplay data from 2022. This project uses normalized hero statistics and an
+              interactive radar chart to compare gameplay attributes, providing a consolidated view of
+              each hero's overall statistical profile to support exploration and comparison.
+            </p>
+            <a class="project-link" href="radar.html"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Guttermach Abortion Data Analysis">
+          <div class="project-image">
+            <img src="/images/abortion.png" alt="Guttermach Abortion Data Analysis">
+            <span class="image-number">07</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>DATA ANALYSIS</span>
+            </div>
+            <h2>Reproductive Healthcare Access</h2>
+            <p>
+              An interactive data visualization project using state-level data from Guttermach's Abortion Provision
+              study, that examines
+              geographic disparities in access to abortion care across the United States and compares persuasive against
+              deceptive visualization
+              techniques.
+            </p>
+            <a class="project-link" href="abortion.html" target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Diabetes Data Analysis">
+          <div class="project-image">
+            <img src="/images/diabetes.png" alt="Diabetes Data Analysis">
+            <span class="image-number">08</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>PREDICTIVE ANALYTICS</span>
+            </div>
+            <h2>Diabetes Risk Assessment and Prediction</h2>
+            <p>
+              An analysis of 2,768 patient observations examining glucose, BMI, age, and other health indicators to
+              assess diabetes risk and support early detection.
+
+            </p>
+            <a class="project-link" href="diabetes.html" target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="North vs. South Bruinwalk Reviews">
+          <div class="project-image">
+            <img src="/images/ucla.png" alt="North vs. South Bruinwalk Reviews">
+            <span class="image-number">09</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>STATISTICAL MODELING</span>
+            </div>
+            <h2>UCLA Bruinwalk Reviews</h2>
+            <p>
+              An educational data science project examining differences in student course ratings across UCLA campuses
+              and identifying key factors associated with instructional quality.
+
+            </p>
+            <a class="project-link"
+              href="stats140.pdf"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Donald Trump's Tweets - Statistical Modeling">
+          <div class="project-image">
+            <img src="/images/twitter.png" alt="Donald Trump's Tweets - Statistical Modeling">
+            <span class="image-number">10</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>STATISTICAL MODELING</span>
+            </div>
+            <h2>Donald Trump's Tweets</h2>
+            <p>
+              An examination of the relationship between political communication on social media and platform modern policies, 
+              focusing on Donald Trump's tweets from 2009 to 2021 to predict the likelhood of flagged tweets under Twitter's 
+              moderation system.
+
+            </p>
+            <a class="project-link"
+              href="twitter.html"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2024" data-title="Intimate Partner Violence - Statistical Analysis ">
+          <div class="project-image">
+            <img src="/images/ipv.png" alt="Intimate Partner Violence - Statistical Analysis">
+            <span class="image-number">11</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2024</span>
+              <span>STATISTICAL ANALYSIS</span>
+            </div>
+            <h2>Who Gets Counted? Data on Intimate Partner Violence (2023)</h2>
+            <p>
+              Examined global estimates of intimate partner violence against women derived from population-based surveys and a multilevel regression model. 
+              Analyzed the underlying data sources, aggregation methods, and geographic coverage while assessing gaps in the dataset and the limitations 
+              of cross-country comparisons. The project combines statistical analysis with a critical examination of how methodological choices influence 
+              the representation of intimate partner violence.
+            </p>
+            <a class="project-link"
+              href="ipv.html"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card" data-year="2023" data-title="UCLA Regression Analysis">
+          <div class="project-image">
+            <img src="/images/gpa.png" alt="UCLA Regression Analysis">
+            <span class="image-number">11</span>
+          </div>
+          <div class="project-content">
+            <div class="project-meta">
+              <span>2023</span>
+              <span>LINEAR REGRESSION</span>
+            </div>
+            <h2>Modeling UCLA Student GPA: A Regression Analysis </h2>
+            <p>
+              Used survey data from UCLA undergraduate students to model GPA and investigate which factors were most strongly associated with academic performance. 
+              Applied multiple linear regression and diagnostic analysis to evaluate predictor relationships and model assumptions.
+            </p>
+            <a class="project-link"
+              href="101a.pdf"
+              target="_blank" rel="noopener">
+              VIEW PROJECT <b>↗</b>
+            </a>
+          </div>
+        </article>
+
+      </div>
+
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <span>NO MATCHES</span>
+        <p>Try another project name or year.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="projects-footer">
+    <span>LAURA NGO</span>
+    <span>DATA ANALYST · DATA SCIENCE</span>
+  </footer>
+
+  <script src="projects.js"></script>
+</body>
+
+</html>

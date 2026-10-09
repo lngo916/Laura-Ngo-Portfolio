@@ -1,0 +1,1654 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset=utf8>
+  <meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <style>
+    :root {
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font: 14px -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #faf9f5;
+      color: #141413
+    }
+
+    img {
+      max-width: 100%
+    }
+
+    [hidden]:not([hidden=until-found i]) {
+      display: none !important
+    }
+  </style>
+</head>
+
+<body>
+  <title>IPV Data Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --night: #12113a;
+      --indigo: #2d3190;
+      --haze: #7378cf;
+      --blush: #e9cfe0;
+      --paper: #f8f4fb;
+      --muted: rgba(248, 244, 251, 0.74);
+      --line: rgba(248, 244, 251, 0.2);
+      --glass: rgba(18, 17, 58, 0.45);
+      --glass-soft: rgba(248, 244, 251, 0.07);
+      --display: 'Instrument Serif', 'Times New Roman', serif;
+      --body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--night);
+      color: var(--paper);
+      font-family: var(--body);
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 0;
+      min-height: 100%;
+    }
+
+    .field {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+      background: var(--night);
+    }
+
+    .field::before {
+      content: '';
+      position: absolute;
+      inset: -25%;
+      background:
+        radial-gradient(45% 40% at 68% 18%, rgba(233, 207, 224, 0.42), transparent 70%),
+        radial-gradient(50% 55% at 12% 78%, rgba(45, 49, 144, 0.95), transparent 72%),
+        radial-gradient(55% 50% at 92% 88%, rgba(115, 120, 207, 0.55), transparent 70%),
+        radial-gradient(40% 40% at 30% 30%, rgba(80, 84, 186, 0.6), transparent 70%);
+      animation: drift 40s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(-3%, -2%, 0) rotate(-2deg) scale(1);
+      }
+
+      to {
+        transform: translate3d(4%, 3%, 0) rotate(3deg) scale(1.08);
+      }
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      padding-inline: clamp(16px, 4vw, 48px);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin-inline: auto;
+    }
+
+    /* header + nav */
+    .top {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 10;
+      padding-block: 14px;
+    }
+
+    .bar {
+      max-width: 1080px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 24px;
+      flex-wrap: wrap;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 10px 8px 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand .ph {
+      width: 38px;
+      height: 38px;
+      flex: none;
+    }
+
+    .brand-name {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    nav {
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      display: block;
+      padding: 8px 16px;
+      border-radius: 999px;
+      color: var(--paper);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    nav a:hover {
+      background: var(--glass-soft);
+    }
+
+    nav a[aria-current="page"] {
+      background: var(--paper);
+      color: var(--night);
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible,
+    input:focus-visible,
+    .ph:focus-visible,
+    [contenteditable="true"]:focus-visible {
+      outline: 2px solid var(--blush);
+      outline-offset: 3px;
+    }
+
+    /* type */
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      font-weight: 400;
+      margin: 0;
+      text-wrap: balance;
+      letter-spacing: -0.015em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 9vw, 6.25rem);
+      line-height: 0.95;
+    }
+
+    h2 {
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      line-height: 1;
+    }
+
+    h3 {
+      font-size: 1.65rem;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0;
+      max-width: 66ch;
+    }
+
+    .lede {
+      font-size: 1.15rem;
+      color: var(--paper);
+      max-width: 1200px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .label {
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* pages */
+    .page {
+      padding-block: 15px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      animation: rise 0.5s ease-out;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(14px);
+      }
+
+      to {
+        transform: none;
+      }
+    }
+
+    .block {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .block.center {
+      align-items: center;
+      text-align: center;
+    }
+
+    .page-head {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .page-head p {
+      margin-bottom: 2px;
+    }
+
+    /* placeholders and uploads */
+    .ph {
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      cursor: pointer;
+      width: 100%;
+      aspect-ratio: var(--ratio, 16 / 9);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background:
+        linear-gradient(to top right, transparent calc(50% - 0.5px), rgba(248, 244, 251, 0.16) 50%, transparent calc(50% + 0.5px)),
+        linear-gradient(to bottom right, transparent calc(50% - 0.5px), rgba(248, 244, 251, 0.16) 50%, transparent calc(50% + 0.5px)),
+        var(--glass-soft);
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .ph:hover {
+      border-color: var(--blush);
+    }
+
+    .ph span {
+      position: relative;
+      background: var(--night);
+      padding: 4px 12px;
+      border-radius: 999px;
+      max-width: 90%;
+    }
+
+    .ph.has-img span {
+      display: none;
+    }
+
+    .ph input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .ph.round {
+      border-radius: 50%;
+      aspect-ratio: 1;
+    }
+
+    .ph.round span {
+      padding: 2px 8px;
+      font-size: 0.7rem;
+    }
+
+    .caption {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      background: var(--paper);
+      color: var(--night);
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 24px;
+      font: 600 0.95rem var(--body);
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: var(--blush);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--paper);
+      border: 1px solid var(--line);
+    }
+
+    .btn.ghost:hover {
+      background: var(--glass-soft);
+    }
+
+    .btn[disabled] {
+      opacity: 0.4;
+      cursor: default;
+      transform: none;
+    }
+
+    .panel {
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      padding: clamp(18px, 3vw, 12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* home banner */
+    .banner {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(32, 36, 135, 0.75), rgba(140, 143, 205, 0.4) 55%, rgba(233, 207, 224, 0.4));
+      padding: clamp(20px, 4vw, 36px);
+      --above: 114px;
+      min-height: calc(100vh - var(--above));
+      /* fallback */
+      min-height: calc(100svh - var(--above));
+      /* better on mobile browsers */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+    }
+
+    .ring {
+      position: absolute;
+      width: clamp(220px, 44%, 400px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      top: 50%;
+      background: rgba(248, 244, 251, 0.07);
+    }
+
+    .ring.a {
+      left: 50%;
+      transform: translate(-82%, -50%);
+      border: 1.5px solid rgba(248, 244, 251, 0.6);
+    }
+
+    .ring.b {
+      left: 50%;
+      transform: translate(-18%, -50%);
+      border: 1.5px dashed rgba(248, 244, 251, 0.6);
+    }
+
+    .banner>*:not(.ring) {
+      position: relative;
+    }
+
+    .banner h1 {
+      max-width: 11ch;
+    }
+
+    .banner small {
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* research questions */
+    .rq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 20px;
+    }
+
+    .rq {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+
+    details[open]>summary::after {
+      transform: rotate(45deg);
+    }
+
+    details>div {
+      padding-top: 10px;
+      color: var(--muted);
+    }
+
+    /* bar chart */
+    .chart {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chart-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.35;
+    }
+
+    .chart-plot {
+      display: grid;
+      gap: 8px;
+    }
+
+    .c-row {
+      display: grid;
+      grid-template-columns: minmax(5.5rem, 32%) minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      border-radius: 6px;
+      outline-offset: 2px;
+      cursor: default;
+    }
+
+    .c-label {
+      text-align: right;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      color: var(--muted);
+    }
+
+    .c-track {
+      position: relative;
+      height: 20px;
+      background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+      background-size: calc(100% / 9) 100%;
+      background-repeat: repeat-x;
+      border-right: 1px solid var(--line);
+    }
+
+    .c-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--haze);
+      border-radius: 0 4px 4px 0;
+      transition: background 0.15s;
+    }
+
+    .c-val {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--paper);
+      white-space: nowrap;
+    }
+
+    .c-row:hover .c-bar,
+    .c-row:focus-visible .c-bar,
+    .c-row.on .c-bar {
+      background: var(--blush);
+    }
+
+    .c-row:hover .c-label,
+    .c-row:focus-visible .c-label,
+    .c-row.on .c-label {
+      color: var(--paper);
+    }
+
+    .c-axis {
+      position: relative;
+      height: 1.2rem;
+      margin-top: 2px;
+    }
+
+    .c-axis span {
+      position: absolute;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .c-axis-title {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .chart-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .readout {
+      font-size: 0.85rem;
+      min-height: 1.4em;
+    }
+
+    .link-btn {
+      background: none;
+      border: 0;
+      padding: 4px 0;
+      color: var(--blush);
+      font: 500 0.85rem var(--body);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    .chart table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart th,
+    .chart td {
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .chart td:last-child,
+    .chart th:last-child {
+      text-align: right;
+    }
+
+    .rq h3 {
+      font-size: 1.35rem;
+    }
+
+    /* Tree Map */
+    .tree {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 504 / 312;
+    }
+
+    .tile {
+      position: absolute;
+      padding: 1px;
+      cursor: default;
+    }
+
+    .tile>div {
+      width: 100%;
+      height: 100%;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: filter 0.15s;
+    }
+
+    .tile:hover>div,
+    .tile:focus-visible>div,
+    .tile.on>div {
+      filter: brightness(1.12);
+    }
+
+    .tile:focus-visible {
+      outline: 2px solid var(--paper);
+      outline-offset: -2px;
+    }
+
+    .tile.t1>div {
+      background: #2d3190;
+      color: #f8f4fb;
+    }
+
+    .tile.t2>div {
+      background: #4448a8;
+      color: #f8f4fb;
+    }
+
+    .tile.t3>div {
+      background: #6a6fc4;
+      color: #12113a;
+    }
+
+    .tile.t4>div {
+      background: #9ea2e0;
+      color: #12113a;
+    }
+
+    .tile.t5>div {
+      background: #cfd1f2;
+      color: #12113a;
+    }
+
+    /* timeline */
+    .tl-scroll {
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 6px;
+    }
+
+    .tl-track {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      padding-block: 20px 8px;
+      min-width: 860px;
+    }
+
+    .tl-track::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 41px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .tl-fill {
+      position: absolute;
+      left: 0;
+      top: 41px;
+      height: 2px;
+      background: var(--blush);
+      transition: width 0.4s;
+    }
+
+    .tl-dot {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: 0;
+      color: var(--muted);
+      font: 500 0.85rem var(--body);
+      cursor: pointer;
+      padding: 0;
+      margin-left: 10px;
+    }
+
+    .tl-dot i {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: var(--night);
+      transition: all 0.25s;
+      display: block;
+    }
+
+    .tl-dot:hover i {
+      border-color: var(--blush);
+    }
+
+    .tl-dot[aria-pressed="true"] {
+      color: var(--paper);
+    }
+
+    .tl-dot[aria-pressed="true"] i {
+      background: var(--blush);
+      border-color: var(--blush);
+      transform: scale(1.2);
+    }
+
+    .tl-dot.past i {
+      border-color: var(--blush);
+    }
+
+    .tl-detail {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+      min-height: 13rem;
+      align-content: start;
+    }
+
+    .tl-detail h3 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+    }
+
+    .tl-year {
+      font-family: var(--display);
+      font-size: clamp(3.5rem, 11vw, 7rem);
+      line-height: 0.6;
+      color: var(--blush);
+    }
+
+    .tl-why {
+      border-left: 2px solid var(--blush);
+      padding-left: 14px;
+      color: var(--muted);
+      max-width: 1500px;
+    }
+
+    .tl-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .wide-text p {
+      max-width: none;
+      font-size: 0.8rem;
+      margin-top: 0px;
+    }
+
+    #tlBody {
+      max-width: none;
+    }
+
+    /* data page */
+    .two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 24px;
+    }
+
+    .two>* {
+      min-width: 0;
+    }
+
+    .fig {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .map {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      display: block;
+      background: var(--glass-soft);
+    }
+
+    .pin {
+      cursor: pointer;
+    }
+
+    .pin circle {
+      fill: var(--blush);
+      stroke: var(--night);
+      stroke-width: 2;
+      transition: r 0.2s;
+    }
+
+    .pin:hover circle,
+    .pin:focus circle {
+      r: 9;
+    }
+
+    .pin:focus {
+      outline: none;
+    }
+
+    .pin:focus circle {
+      stroke: var(--paper);
+    }
+
+    .map-note {
+      min-height: 1.6em;
+      color: var(--paper);
+      font-size: 0.9rem;
+    }
+
+    /* about */
+    .member .avatar {
+      width: 112px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      object-fit: cover;
+      /* crops non-square photos to fill the circle */
+      border: 1px solid var(--line);
+    }
+
+    @media (max-width: 420px) {
+      .member .avatar {
+        width: 84px;
+      }
+    }
+
+    .member {
+  display: block;                 /* was: grid with a 112px photo column */
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.member .role {
+  margin-bottom: 10px;            /* was 6px; a bit more air before the bio */
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 700px) {
+  .team {
+    grid-template-columns: 1fr;   /* one column on phones so cards don't get cramped */
+  }
+}
+
+    .member h3 {
+      font-size: 1.45rem;
+    }
+
+
+    .member p {
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
+
+
+    /* bibliography */
+    .biblio ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .biblio li {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+
+    .biblio li span {
+      min-width: 0;
+      padding-left: 1.6em;
+      text-indent: -1.6em;
+      overflow-wrap: anywhere;
+    }
+
+    .rm {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      border-radius: 999px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      flex: none;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .rm:hover {
+      color: var(--paper);
+      border-color: var(--paper);
+    }
+
+    .add {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .add input {
+      flex: 1 1 260px;
+      min-width: 0;
+      background: var(--glass-soft);
+      border: 1px solid var(--line);
+      color: var(--paper);
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: 400 0.95rem var(--body);
+    }
+
+    .add input::placeholder {
+      color: var(--muted);
+    }
+
+    /* footer */
+    .foot {
+      position: relative;
+      z-index: 1;
+      padding-block: 0px 28px;
+    }
+
+    .foot .panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 20px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .foot p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: none;
+    }
+
+    .foot strong {
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    .foot a {
+      color: var(--blush);
+    }
+
+    body.editing [data-edit] {
+      outline: 1px dashed var(--blush);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .field::before,
+      .page {
+        animation: none;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+
+  <div class="field" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header class="top">
+      <div class="bar">
+        <div class="brand">
+          <span class="brand-name" data-edit>Binary Bros.</span>
+        </div>
+        <nav aria-label="Pages">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#timeline">Timeline</a></li>
+            <li><a href="#narrative">Narrative</a></li>
+            <li><a href="#data">Data</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#discussion">Discussion</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+
+      <!-- HOME -->
+      <section class="page" data-page="home">
+        <div class="banner" role="img"
+          aria-label="Two overlapping circles, one solid and one dashed, behind the project title">
+          <i class="ring a"></i><i class="ring b"></i>
+          <span class="label">2024</span>
+          <h1>Who Gets Counted?</h1>
+          <div>
+            <p class="banner-subtitle">Intimate Partner Violence & Data</p>
+            <small class="muted" data-edit>Binary Bros · DH 101</small>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>Project Statement</h2>
+          <p class="lede" data-edit>
+            Intimate partner violence (IPV) includes physical violence, sexual violence, stalking, and psychological
+            harm by a current or former partner. However, how data is collected, who is represented, and what
+            researchers choose
+            to measure regarding intimate partner violence can only shape our understanding. This project examines how
+            global IPV
+            data is gathered and modeled, what it can reveal about violence across populations, and which experiences
+            may remain unseen.
+          </p>
+        </div>
+
+        <div class="block">
+          <h2>Research Questions</h2>
+          <div class="rq-grid">
+            <article class="panel rq">
+              <h3 data-edit>How does intimate partner violence vary in prevalence and reporting across different
+                cultural and socio-economic contexts? What factors influence these variations?</h3>
+              <figure class="chart" id="ipvChart"
+                aria-label="Bar chart of the proportion of women who have ever experienced intimate partner violence, by region and income group">
+                <figcaption class="chart-title">Proportion of women who have ever experienced intimate partner violence
+                  (%)</figcaption>
+                <div id="chartView">
+                  <div class="chart-plot" id="chartPlot" role="list"></div>
+                  <div class="c-row" aria-hidden="true">
+                    <div></div>
+                    <div class="c-axis" id="chartAxis"></div>
+                  </div>
+                  <div class="c-axis-title">% women who experienced IPV in the first 10 years of partnership</div>
+                </div>
+                <div id="chartTable" hidden></div>
+                <div class="chart-foot">
+                  <span class="readout" id="chartReadout" aria-live="polite">Hover or focus a bar for its value.</span>
+                  <button type="button" class="link-btn" id="chartToggle" aria-pressed="false">View as table</button>
+                </div>
+              </figure>
+              <details>
+                <summary>Analysis:</summary>
+                <div data-edit>The following bar chart illustrates the proportion of women who have experienced intimate
+                  partner violence within the first ten years of partnership. It was categorized by GDP and regional
+                  qualifiers and
+                  chosen over an individual country chart given its clearer comparative analysis across various economic
+                  classes and regional
+                  contexts. Ultimately, this percentage is highest amongst the factors that they belong to a low-income
+                  class and
+                  are within Southern Asia. The indicator with the least percentage includes those who live within East
+                  Asia and the Pacific.
+                </div>
+              </details>
+            </article>
+            <article class="panel rq">
+              <h3 data-edit>How has the rate of IPV fluctuated over the years? Could external global factors contribute
+                to the percentage of women who experience IPV?</h3>
+              <figure class="chart" id="treeChart"
+                aria-label="Treemap of women whose first experience of spousal violence was within ten years of marriage, by year">
+                <figcaption class="chart-title">Percentage of women whose first experience of spousal physical or sexual
+                  violence was within ten years of marriage, by year</figcaption>
+                <div id="treeView">
+                  <div class="tree" id="treePlot" role="list"></div>
+                </div>
+              </figure>
+              <details>
+                <summary>Analysis:</summary>
+                <div data-edit>
+                  Based on this tree map of the percentage of women whose first experience of spousal physical or sexual
+                  violence within the first
+                  ten years of marriage by year, 2016 and 2018 appear more significant. While there is no definite
+                  correlation solely indicated by
+                  this graph, it can dictate prominant years of high levels of first-experienced spousal violence.
+                </div>
+              </details>
+            </article>
+
+          </div>
+          <a class="btn" href="#timeline" style="margin-top:8px">View the full project →</a>
+        </div>
+      </section>
+
+      <!-- TIMELINE -->
+      <section class="page" data-page="timeline" hidden>
+        <div class="page-head">
+          <h1>Historical Timeline (1962 - 2019)</h1>
+        </div>
+
+        <div class="block wide-text">
+          <p data-edit>Although there have been records of response to domestic violence dating back to the early
+            1500's, we will discuss signficant events dating from 1962 to 2019. Reading across the timeline, the
+            expansion from local crisis lines and
+            shelters in the 1970s, to court rulings and state laws in the 1980s and 1990s, to national legislation that
+            is renewed over time. (make smaller) </p>
+        </div>
+        <div class="panel" id="tl" aria-live="polite">
+          <div class="tl-scroll" id="tlScroll">
+            <div class="tl-track" id="tlTrack" role="group" aria-label="Milestones">
+              <div class="tl-fill" id="tlFill"></div>
+            </div>
+          </div>
+          <div class="tl-detail">
+            <div class="tl-year" id="tlYear"></div>
+            <p class="label" id="tlPlace"></p>
+            <h3 id="tlTitle"></h3>
+            <p id="tlBody"></p>
+          </div>
+          <div class="tl-controls">
+            <button class="btn ghost" id="tlPrev" type="button">← Earlier</button>
+            <button class="btn" id="tlNext" type="button">Later →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- NARRATIVE -->
+      <section class="page" data-page="narrative" hidden>
+        <div class="page-head">
+          <h1>Research Motivations</h1>
+        </div>
+
+        <div class="block">
+          <h2>introduction.</h2>
+          <p data-edit>Start with the question that brought the group to this topic. Say what IPV is, why measuring it
+            is hard, and what readers will find in the pages that follow.</p>
+          <p data-edit>Explain your approach in two or three sentences: which datasets you chose, why, and how you read
+            them.</p>
+        </div>
+        <div class="ph" data-label="Add banner image" style="--ratio:4/1"></div>
+
+        <div class="block">
+          <h2>analysis.</h2>
+          <p data-edit>Walk through what the data shows. Take one finding at a time, state it plainly, and point to the
+            figure on the Data page that supports it.</p>
+          <p data-edit>Then say what the finding does not show. A number about reported cases describes reporting, not
+            everything that happened.</p>
+        </div>
+        <div class="ph" data-label="Add banner image" style="--ratio:4/1"></div>
+
+        <div class="block">
+          <h2>conclusion.</h2>
+          <p data-edit>Return to the research questions and answer each one briefly. Close with what you would want a
+            reader to remember, and what better data would look like.</p>
+          <a class="btn" href="#discussion">Continue to discussion →</a>
+        </div>
+      </section>
+
+      <!-- DATA -->
+      <section class="page" data-page="data" hidden>
+        <div class="page-head">
+          <h1>the data.</h1>
+        </div>
+
+        <div class="block">
+          <h2>datasets.</h2>
+          <div class="two">
+            <figure class="fig" style="margin:0">
+              <div class="ph" data-label="Add chart or image" style="--ratio:4/3"></div>
+              <h3 data-edit>dataset one.</h3>
+              <figcaption class="caption" data-edit>Figure 1. Describe what this chart shows, the years covered, and the
+                source.</figcaption>
+            </figure>
+            <figure class="fig" style="margin:0">
+              <div class="ph" data-label="Add chart or image" style="--ratio:4/3"></div>
+              <h3 data-edit>dataset two.</h3>
+              <figcaption class="caption" data-edit>Figure 2. Describe what this chart shows, the years covered, and the
+                source.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2>data critique.</h2>
+          <div class="two">
+            <div class="block">
+              <p data-edit>A dataset is a record of choices. Open each question below and answer it for your own
+                datasets.</p>
+              <div class="panel" style="display:grid;gap:12px">
+                <details open>
+                  <summary>Who collected this, and why?</summary>
+                  <div data-edit>Name the agency or group and its purpose. A police record and a public health survey
+                    answer different questions.</div>
+                </details>
+                <details>
+                  <summary>Who is counted?</summary>
+                  <div data-edit>Note age range, relationship types, gender categories and who had to take part for a
+                    case to appear.</div>
+                </details>
+                <details>
+                  <summary>Who is missing?</summary>
+                  <div data-edit>Think about people who do not report, cannot access services, or fall outside the
+                    definitions used.</div>
+                </details>
+                <details>
+                  <summary>What could change the numbers?</summary>
+                  <div data-edit>Changes in law, funding, wording or outreach can raise or lower counts without any
+                    change in lived reality.</div>
+                </details>
+              </div>
+            </div>
+            <div class="fig">
+              <div class="ph" data-label="Add image" style="--ratio:4/3"></div>
+              <p class="caption" data-edit>Image caption: say what this shows and where it came from.</p>
+            </div>
+          </div>
+
+          <div class="two" style="margin-top:12px">
+            <div class="fig">
+              <svg class="map" viewBox="0 0 400 280" role="img"
+                aria-label="Stylized street map with a highlighted route and three pins">
+                <g stroke="rgba(248,244,251,0.16)" stroke-width="1.5" fill="none">
+                  <path d="M0 60H400M0 130H400M0 205H400M70 0V280M160 0V280M250 0V280M335 0V280" />
+                  <path d="M0 250L400 20" stroke-width="1" />
+                </g>
+                <rect x="170" y="140" width="70" height="55" rx="6" fill="rgba(115,120,207,0.25)" />
+                <rect x="80" y="70" width="70" height="50" rx="6" fill="rgba(115,120,207,0.25)" />
+                <path d="M20 205H160V130H250V60H380" stroke="#e9cfe0" stroke-width="5" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+                <g class="pin" tabindex="0" data-note="Example location one. Replace with a place from your data.">
+                  <circle cx="160" cy="205" r="7" />
+                </g>
+                <g class="pin" tabindex="0" data-note="Example location two. Replace with a place from your data.">
+                  <circle cx="250" cy="130" r="7" />
+                </g>
+                <g class="pin" tabindex="0" data-note="Example location three. Replace with a place from your data.">
+                  <circle cx="335" cy="60" r="7" />
+                </g>
+              </svg>
+              <p class="map-note" id="mapNote" aria-live="polite">Select a pin.</p>
+              <p class="caption" data-edit>Map placeholder. Replace with the locations or regions your dataset covers.
+              </p>
+            </div>
+            <div class="block">
+              <p data-edit>Use this space to connect place to the data. Where do the records come from? Are some areas
+                covered much more thoroughly than others, and is that because of need or because of access?</p>
+              <p data-edit>Close the critique with one sentence on how much weight you would put on each dataset, and
+                why.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="page" data-page="about" hidden>
+        <div class="page-head">
+          <h1>Meet the Team</h1>
+        </div>
+        <div class="team" id="team"></div>
+        <div class="block">
+          <h2>acknowledgments.</h2>
+          <p data-edit>Thank the instructor, the people who gave feedback, and the organizations whose data and research
+            made this project possible.</p>
+        </div>
+      </section>
+
+      <!-- DISCUSSION -->
+      <section class="page" data-page="discussion" hidden>
+        <div class="page-head">
+          <h1>discussion.</h1>
+        </div>
+        <div class="block">
+          <h2>overview.</h2>
+          <p data-edit>Reflect on the whole project. What surprised you? Which question could you answer, and which
+            could the data not answer? What would you collect next, and how would you do it with care for the people it
+            describes?</p>
+        </div>
+        <div class="ph" data-label="Add image" style="--ratio:3/1"></div>
+        <div class="block biblio">
+          <h2>bibliography.</h2>
+          <div class="panel">
+            <ol id="bibList"></ol>
+            <form class="add" id="bibForm">
+              <input id="bibInput" type="text" placeholder="Paste a citation and press Add" aria-label="New citation"
+                autocomplete="off">
+              <button class="btn" type="submit">Add source</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="foot">
+      <div class="wrap panel">
+        <div style="display:grid;gap:6px;max-width:1200px">
+          <p><strong>If you or someone you know needs support</strong></p>
+          <p>The National Domestic Violence Hotline is free and available any time: <strong>1-800-799-7233</strong>, or
+            text BEGIN to <strong>88788</strong>. Chat at <a href="https://www.thehotline.org"
+              rel="noopener">thehotline.org</a>.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var PAGES = ['home', 'timeline', 'narrative', 'data', 'about', 'discussion'];
+
+      /* routing */
+      function route(forced) {
+        var id = forced || location.hash.slice(1);
+        if (PAGES.indexOf(id) < 0) id = 'home';
+        document.querySelectorAll('[data-page]').forEach(function (s) { s.hidden = s.dataset.page !== id; });
+        document.querySelectorAll('nav a').forEach(function (a) {
+          if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+        window.scrollTo(0, 0);
+        if (id === 'timeline' && typeof show === 'function') show(cur);
+      }
+      window.addEventListener('hashchange', function () { route(); });
+
+      /* in-page links: switch pages directly so navigation also works where the
+         address bar hash cannot change (previews, embedded frames) */
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var id = a.getAttribute('href').slice(1);
+          if (PAGES.indexOf(id) < 0) return;
+          e.preventDefault();
+          route(id);
+          try { history.replaceState(null, '', '#' + id); } catch (err) { }
+        });
+      });
+
+      /* bar chart (values read from the source chart, rounded to 0.1) */
+      var IPV = [
+        ['Low income', 35.5], ['South Asia', 35.5], ['Sub-Saharan Africa', 33.0], ['Lower middle income', 32.2],
+        ['Middle East & North Africa', 29.7], ['North America', 25.4], ['Latin America & Caribbean', 25.0],
+        ['High income', 22.3], ['Europe & Central Asia', 20.9], ['East Asia & Pacific', 20.3]
+      ];
+      var MAXV = 36;
+      var plot = document.getElementById('chartPlot'), readout = document.getElementById('chartReadout');
+      var DEFAULT_READ = 'Hover or focus a bar for its value.';
+      IPV.forEach(function (d, i) {
+        var row = document.createElement('div');
+        row.className = 'c-row'; row.setAttribute('role', 'listitem'); row.tabIndex = 0;
+        row.setAttribute('aria-label', d[0] + ', ' + d[1].toFixed(1) + ' percent');
+        var lab = document.createElement('div'); lab.className = 'c-label'; lab.textContent = d[0];
+        var tr = document.createElement('div'); tr.className = 'c-track';
+        var bar = document.createElement('div'); bar.className = 'c-bar'; bar.style.width = (d[1] / MAXV * 100) + '%';
+        tr.appendChild(bar);
+        /* label only the highest and lowest bars; the readout and table carry the rest */
+        if (i === 0 || i === IPV.length - 1) {
+          var v = document.createElement('span'); v.className = 'c-val'; v.textContent = d[1].toFixed(1);
+          v.style.left = (d[1] / MAXV * 100) + '%'; tr.appendChild(v);
+        }
+        row.appendChild(lab); row.appendChild(tr); plot.appendChild(row);
+        function on() { row.classList.add('on'); readout.textContent = d[0] + ': ' + d[1].toFixed(1) + '% of women'; }
+        function off() { row.classList.remove('on'); readout.textContent = DEFAULT_READ; }
+        row.addEventListener('mouseenter', on); row.addEventListener('mouseleave', off);
+        row.addEventListener('focus', on); row.addEventListener('blur', off);
+      });
+      var axis = document.getElementById('chartAxis');
+      for (var t = 0; t <= MAXV; t += 4) {
+        var s = document.createElement('span'); s.textContent = t; s.style.left = (t / MAXV * 100) + '%'; axis.appendChild(s);
+      }
+      var tbl = document.getElementById('chartTable');
+      tbl.innerHTML = '<table><caption class="sr-only" style="position:absolute;left:-9999px">IPV prevalence by region and income group</caption><thead><tr><th scope="col">Region or income group</th><th scope="col">% of women</th></tr></thead><tbody>' +
+        IPV.map(function (d) { return '<tr><td>' + d[0].replace(/&/g, '&amp;') + '</td><td>' + d[1].toFixed(1) + '</td></tr>'; }).join('') + '</tbody></table>';
+      var ct = document.getElementById('chartToggle');
+      ct.addEventListener('click', function () {
+        var showTable = ct.getAttribute('aria-pressed') !== 'true';
+        ct.setAttribute('aria-pressed', showTable ? 'true' : 'false');
+        ct.textContent = showTable ? 'View as chart' : 'View as table';
+        document.getElementById('chartView').hidden = showTable;
+        tbl.hidden = !showTable;
+      });
+
+      /* treemap: tile sizes read from the source chart */
+      var TREE = [
+        { y: '2016', x: 0, t: 0, w: 47.6, h: 53.2, c: 't1' },
+        { y: '2018', x: 0, t: 53.2, w: 47.6, h: 46.8, c: 't2' },
+        { y: '2014', x: 47.6, t: 0, w: 26.2, h: 49.7, c: 't3' },
+        { y: '2015', x: 73.8, t: 0, w: 26.2, h: 49.7, c: 't3' },
+        { y: '2020', x: 47.6, t: 49.7, w: 39.7, h: 25.0, c: 't4' },
+        { y: '2017', x: 47.6, t: 74.7, w: 39.7, h: 25.3, c: 't4' },
+        { y: '2019', x: 87.3, t: 49.7, w: 12.7, h: 50.3, c: 't5' }
+      ];
+      var tPlot = document.getElementById('treePlot');
+      TREE.forEach(function (d) {
+        var tile = document.createElement('div');
+        tile.className = 'tile ' + d.c; tile.setAttribute('role', 'listitem'); tile.tabIndex = 0;
+        tile.style.cssText = 'left:' + d.x + '%;top:' + d.t + '%;width:' + d.w + '%;height:' + d.h + '%';
+        tile.setAttribute('aria-label', d.y);
+        var inner = document.createElement('div'); inner.textContent = d.y; tile.appendChild(inner);
+        tPlot.appendChild(tile);
+      });
+
+      /* image uploads */
+      function buildPh(el) {
+        var span = document.createElement('span');
+        span.textContent = el.dataset.label || 'Add image';
+        var input = document.createElement('input');
+        input.type = 'file'; input.accept = 'image/*'; input.tabIndex = -1;
+        input.setAttribute('aria-label', el.dataset.label || 'Add image');
+        el.appendChild(span); el.appendChild(input);
+        el.tabIndex = 0; el.setAttribute('role', 'button');
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+        input.addEventListener('change', function () {
+          var f = input.files && input.files[0];
+          if (!f) return;
+          var r = new FileReader();
+          r.onload = function () { el.style.background = 'url(' + r.result + ') center / cover no-repeat'; el.classList.add('has-img'); };
+          r.readAsDataURL(f);
+        });
+      }
+
+      /* timeline */
+      var EVENTS = [
+        { y: '1962', p: 'New York', t: 'New York Family Court Act of 1962', b: 'Domestic violence cases in New York transferred from criminal to family court, allowing abusers to only face civil procedures rather than criminal penalties.' },
+        { y: '1972', p: 'Washington, DC', t: 'D.C. Rape Crisis Center', b: 'Activists Liz O\'Sullivan and Karen Kollias initiated the establishment of one of the nation\'s first nonprofit emergency criss lines for survivors of sexual assault.' },
+        { y: '1975', p: 'New York', t: 'Abused Women\'s Aid in Crisis (AWAIC)', b: 'Activist Marjory Fields founded the AWAIC, a 24/7 structured support line that provided crisis counseling, safety planning, and legal advocacy for victims of domestic abuse that were seeking help.' },
+        { y: '1976', p: 'New York City', t: 'Resolution 491', b: 'Council member Miriam Friedlander urged agencies to create specialied assistance for victims of domestic abuse. This later led to the opening of the first publicly funded domestic violence shelter called the Women\'s Survival Space (now known as the Center Against Domestic Violence).' },
+        { y: '1978', p: 'New York', t: 'NY State coalition Against Domestic Violence (NYSCADV)', b: 'New York opens the NYSCADV, the state\'s first statewide domestic violence hotline dedicated to signficantly reduce cases of domestic violence.' },
+        { y: '1983', p: 'United States', t: '700+ nationwide domestic violence shelters', b: 'The rise of the Battered Women\'s Movement led to the rapidly massive growth of major federal funding, protection, and domestic violence shelters. These organizations help approximately 91,000 women and 131,000 children each year.' },
+        { y: '1984', p: 'New York', t: 'People v. Liberta', b: 'In the case of People v. Liberta, the court deemed married women to have the same right to control their own bodies as unmarried women. In turn, marital rape was declared a crime by New York\’s highest court, sparking a national shift in legal standards. ' },
+        { y: '1985', p: 'Seattle, WA', t: 'Refugee Women\'s Alliance (ReWA), NYSCADV Expansion', b: 'ReWA began a multi-ethnic domestic violence program that worked toward crisis advocacy, safety planning, and resources for immigrant women and children facing systemic and linguistic barriers. The NYSCADV also formally established its Spanish-language crisis hotline to broaden their safety net for people of color.' },
+        { y: '1990', p: 'United States', t: 'H.Con.Res. 172', b: 'Congress passed this to establish a legal presumption such that the abusive parent must prove a completion of a 52-week batterer intervention program and show no further acts of violence before attempting to gain custody or unsupervised visituation of their child.' },
+        { y: '1993', p: 'United Nations', t: 'Resolution 48/140', b: 'The UN establishes gender-based violence violates basic human rights freedoms, adopting measures that are directed towards the elimination of violence against women (Declaration on the Elimination of Violence against Women).' },
+        { y: '1994', p: 'United States', t: 'Violence Against Women Act (VAWA)', b: 'This act is passed by Congress and signed into law, deeming domestic violence and sexual assault as federal crimes. The Office on Violence Against Women (OVW) was established to oversee grant programs and national policy and add protections for women.' },
+        { y: '1996', p: 'United States', t: 'LGBT National Help Center', b: 'The LGBT National Help Center, a non-profit, is founded, focusing on providing confidential peer support, community connections, and resources information.' },
+        { y: '1999', p: 'New York', t: 'Article 120 of the New York Penal Law', b: 'After New Jersey and Pennsylvania added stalking to their definitions of abuse in 1994, the state of New York categorizes stalking into four degrees which range from misdemeanors to felonies.' },
+        { y: '2000', p: 'United States', t: 'Sexual Assault Reform Act (SARA)', b: 'New York\'s SARA enforced stricter prison/sentencing minimums (up to 10 years for felonies and residency restrictions in a legislative effort to eliminate child and domestic sexual abuse.' },
+        { y: '2002', p: 'New York', t: 'Chapter 280 of the Laws of 2002', b: 'Child Protective Services  workers and local social services district staff mandate domestic violence training to better respond toward non-offending victims and properly assess child safety.' },
+        { y: '2005', p: 'United States', t: 'The Violence Against Women and Department of Justic Reauthorization Act', b: 'The Violence Against Women Act (VAWA) is renewed and expanded to improve responses to domestic violence and sexual assault cases.' },
+        { y: '2019', p: 'United States', t: 'VAWA "Boyfriend Loophole" Closure”', b: 'VAWA is reauthorized and closes the “boyfriend loophole,” prohibiting abusers from legally buying and owning firearms if they have a domestic abuse conviction.' }
+      ];
+      var cur = 0, track = document.getElementById('tlTrack'), dots = [];
+      EVENTS.forEach(function (ev, idx) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'tl-dot';
+        b.setAttribute('aria-label', ev.y + ': ' + ev.t);
+        b.innerHTML = '<i></i><span>' + ev.y + '</span>';
+        b.addEventListener('click', function () { show(idx); });
+        track.appendChild(b); dots.push(b);
+      });
+      function show(n) {
+        cur = Math.max(0, Math.min(EVENTS.length - 1, n));
+        var ev = EVENTS[cur];
+        document.getElementById('tlYear').textContent = ev.y;
+        var place = document.getElementById('tlPlace');
+        place.textContent = ev.p; place.hidden = !ev.p;
+        document.getElementById('tlTitle').textContent = ev.t;
+        document.getElementById('tlBody').textContent = ev.b;
+        dots.forEach(function (d, i) {
+          d.setAttribute('aria-pressed', i === cur ? 'true' : 'false');
+          d.classList.toggle('past', i < cur);
+        });
+        var tr = track.getBoundingClientRect(), pos = dots[cur].getBoundingClientRect();
+        document.getElementById('tlFill').style.width = Math.max(0, pos.left + pos.width / 2 - tr.left) + 'px';
+        var sc = document.getElementById('tlScroll');
+        sc.scrollTo({ left: Math.max(0, dots[cur].offsetLeft + dots[cur].offsetWidth / 2 - sc.clientWidth / 2), behavior: 'smooth' });
+        document.getElementById('tlPrev').disabled = cur === 0;
+        document.getElementById('tlNext').disabled = cur === EVENTS.length - 1;
+      }
+
+      document.getElementById('tlPrev').addEventListener('click', function () { show(cur - 1); });
+      document.getElementById('tlNext').addEventListener('click', function () { show(cur + 1); });
+      document.addEventListener('keydown', function (e) {
+        if (document.querySelector('[data-page="timeline"]').hidden) return;
+        if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+        if (e.target && e.target.isContentEditable) return;
+        if (e.key === 'ArrowRight') show(cur + 1);
+        if (e.key === 'ArrowLeft') show(cur - 1);
+      });
+      window.addEventListener('resize', function () { show(cur); });
+
+      /* map pins */
+      var note = document.getElementById('mapNote');
+      document.querySelectorAll('.pin').forEach(function (p) {
+        function say() { note.textContent = p.dataset.note; }
+        p.addEventListener('click', say); p.addEventListener('focus', say); p.addEventListener('mouseenter', say);
+      });
+
+      /* team */
+      var TEAM = [
+        {
+          name: 'Laura Ngo',
+          role: 'Project Manager',
+          bio: 'Coordinated project milestones, team communication, documentation, and final deliverables. Led the project timeline and ensured research and site development stayed on track.',
+        },
+
+        {
+          name: 'Xavier Manolo',
+          role: 'Web Designer',
+          bio: 'Designed and developed the website structure and interactive layout, ensuring the site effectively integrated the project’s data, visualizations, and narrative.',
+        },
+
+        {
+          name: 'Baylee Keeney',
+          role: 'Content Developer',
+          bio: 'Developed and refined the project narrative, contributing to the organization, visual presentation, and written content of the site.',
+        },
+
+        {
+          name: 'Julian Macaraeg',
+          role: 'Content Developer',
+          bio: 'Contributed to the written narrative and developed interactive site content to connect the project’s analysis with its visualizations.',
+        },
+
+        {
+          name: 'Brendan Tremblay',
+          role: 'Data Specialist & Developer',
+          bio: 'Prepared and refined the project dataset while contributing to the site’s narrative, analysis, and technical development.',
+        },
+
+        {
+          name: 'Amanda Nhan',
+          role: 'Content Design & Developer',
+          bio: 'Contributed to content development and site design while helping coordinate the final draft and maintain consistency across the project.',
+        }
+      ];
+
+      TEAM.forEach(function (p) {
+        var m = document.createElement('div');
+        m.className = 'member';
+
+        m.innerHTML =
+          '<div>' +
+          '<h3 data-edit>' + p.name + '</h3>' +
+          '<div class="role" data-edit>' + p.role + '</div>' +
+          '<p data-edit>' + p.bio + '</p>' +
+          '</div>';
+
+        team.appendChild(m);
+      });
+      document.querySelectorAll('.ph').forEach(buildPh);
+
+      /* bibliography */
+      var list = document.getElementById('bibList');
+      var refs = [
+        'Smith, S. G., Zhang, X., Basile, K. C., et al. (2018). The National Intimate Partner and Sexual Violence Survey: 2015 data brief, updated release. National Center for Injury Prevention and Control, Centers for Disease Control and Prevention.',
+        'Violence Against Women Act of 1994, Pub. L. No. 103-322, tit. IV, 108 Stat. 1796.'
+      ];
+      function renderRefs() {
+        refs.sort(function (a, b) { return a.localeCompare(b); });
+        list.innerHTML = '';
+        refs.forEach(function (r, i) {
+          var li = document.createElement('li');
+          var s = document.createElement('span'); s.textContent = r;
+          var x = document.createElement('button'); x.type = 'button'; x.className = 'rm'; x.textContent = '×'; x.setAttribute('aria-label', 'Remove citation');
+          x.addEventListener('click', function () { refs.splice(i, 1); renderRefs(); });
+          li.appendChild(s); li.appendChild(x); list.appendChild(li);
+        });
+      }
+      document.getElementById('bibForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var inp = document.getElementById('bibInput'), v = inp.value.trim();
+        if (!v) return;
+        refs.push(v); inp.value = ''; renderRefs();
+      });
+      renderRefs();
+
+      route();
+      show(0);
+    })();
+  </script>
+
+</body>
+
+</html>

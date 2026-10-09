@@ -1,0 +1,2617 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Flagged Tweets Safari</title>
+  <script>document.documentElement.className += ' js'</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --olive: #1a2651;
+      --olive-d: #121c3b;
+      --sage: #253f6a;
+      --sage-d: #1c54b4;
+      --cream: #f4eedc;
+      --paper: #fbf8ee;
+      --ink: #101d2a;
+      --ink-2: #39495b;
+      --terra: #c8602c;
+      --terra-d: #9c5020;
+      --sand: #dba46a;
+      --sky: #86adc0;
+      --line: rgba(42, 33, 16, .18);
+      --serif: "Instrument Serif", "Times New Roman", serif;
+      --sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    /* ==========================================================
+   BASE
+   ========================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font: 400 15px/1.55 var(--sans);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--terra);
+      outline-offset: 3px;
+    }
+
+    .in {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding-inline: 24px;
+    }
+
+    section {
+      position: relative;
+    }
+
+    .sp {
+      padding-block: 64px;
+    }
+
+
+    /* ==========================================================
+   REVEAL
+   ========================================================== */
+
+    .js .rv {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .js .rv.show {
+      opacity: 1;
+      transform: none;
+    }
+
+
+    /* ==========================================================
+   PILLS
+   ========================================================== */
+
+    .pill {
+      display: inline-block;
+      border: 1.5px solid currentColor;
+      border-radius: 999px;
+      padding: 7px 17px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      line-height: 1.3;
+      transition: .2s;
+    }
+
+    .pill:hover {
+      background: var(--cream);
+      color: var(--olive);
+      border-color: var(--cream);
+    }
+
+    .pill.solid {
+      background: var(--terra);
+      border-color: var(--terra);
+      color: #fff;
+    }
+
+    .pill.solid:hover {
+      background: var(--cream);
+      color: var(--terra-d);
+    }
+
+
+    /* ==========================================================
+   SUN MARK
+   ========================================================== */
+
+    .sunmark {
+      width: 46px;
+      height: 28px;
+      color: var(--sand);
+      flex: none;
+    }
+
+
+    /* ==========================================================
+   HERO
+   ========================================================== */
+
+    .hero {
+      background: var(--olive);
+      color: var(--cream);
+      min-height: 100vh;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 0 48px;
+      overflow: hidden;
+      margin-top: 0;
+    }
+
+    .hgrid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font: 400 clamp(56px, 8vw, 112px)/.9 var(--serif);
+      letter-spacing: -.015em;
+      position: relative;
+    }
+
+    h1 em {
+      display: block;
+      font-style: italic;
+      padding-left: .1em;
+    }
+
+    .squig {
+      position: absolute;
+      right: -4%;
+      top: -6%;
+      width: min(30%, 150px);
+      color: var(--cream);
+      pointer-events: none;
+    }
+
+    .squig path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: draw 2.2s .5s ease forwards;
+    }
+
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .lede {
+      max-width: 42ch;
+      font-size: 16px;
+      font-weight: 300;
+      color: #e9e1c6;
+      margin: 20px 0 22px;
+    }
+
+    .cta {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .dune {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      min-height: 540px;
+      max-height: 640px;
+      box-shadow: 0 24px 45px -28px rgba(0, 0, 0, .6);
+    }
+
+    .dune>svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rays {
+      transform-origin: 200px 150px;
+      animation: spin 90s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .vt {
+      position: absolute;
+      right: 17px;
+      bottom: 18px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font: 400 clamp(34px, 4vw, 58px)/.92 var(--serif);
+      text-transform: uppercase;
+      color: var(--cream);
+      letter-spacing: .01em;
+      text-shadow: 0 2px 20px rgba(60, 30, 10, .35);
+    }
+
+    .vt em {
+      text-transform: uppercase;
+    }
+
+    .tag {
+      position: absolute;
+      left: 18px;
+      top: 17px;
+      color: var(--cream);
+      font-size: 12px;
+      letter-spacing: .04em;
+      font-weight: 500;
+    }
+
+
+    /* ==========================================================
+   TICKER
+   ========================================================== */
+
+    .ticker {
+      background: var(--terra);
+      color: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+      padding-block: 9px;
+      font: 400 19px var(--serif);
+      font-style: italic;
+    }
+
+    .ticker div {
+      display: inline-flex;
+      gap: 30px;
+      padding-right: 30px;
+      animation: tick 40s linear infinite;
+    }
+
+    .ticker span::after {
+      content: "✦";
+      margin-left: 30px;
+      font-style: normal;
+      font-size: 12px;
+      opacity: .7;
+    }
+
+    @keyframes tick {
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+
+    /* ==========================================================
+   STICKY NAVIGATION
+   ========================================================== */
+
+    .top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      min-height: 58px;
+      padding: 8px 24px;
+      background: rgba(26, 38, 81, .96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(244, 238, 220, .18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 19px;
+      line-height: 1.15;
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    .nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      border: 1.5px solid rgba(244, 238, 220, .45);
+      border-radius: 999px;
+      padding: 5px 13px;
+      font-size: 12px;
+      text-decoration: none;
+      transition: .2s;
+    }
+
+    .nav a:hover {
+      background: var(--cream);
+      color: var(--olive);
+      border-color: var(--cream);
+    }
+
+
+    /* ==========================================================
+   STATS
+   ========================================================== */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: -1px;
+      background: var(--cream);
+    }
+
+    .stat {
+      border-bottom: 1.5px solid var(--line);
+      padding: 20px 6px;
+    }
+
+    .stat b {
+      display: block;
+      font: 400 clamp(38px, 5vw, 62px)/1 var(--serif);
+      color: var(--olive);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat span {
+      font-size: 11px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      font-weight: 600;
+    }
+
+
+    /* ==========================================================
+   SECTION HEADINGS
+   ========================================================== */
+
+    .eyebrow {
+      display: inline-block;
+      border: 1.5px solid currentColor;
+      border-radius: 999px;
+      padding: 3px 13px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font: 400 clamp(38px, 5.2vw, 68px)/.95 var(--serif);
+      letter-spacing: -.01em;
+    }
+
+    h2 em {
+      font-style: italic;
+    }
+
+    h3 {
+      margin: 0;
+      font: 400 clamp(24px, 2.8vw, 32px)/1.05 var(--serif);
+      text-transform: uppercase;
+      letter-spacing: .01em;
+    }
+
+    h3 em {
+      font-style: italic;
+    }
+
+
+    /* ==========================================================
+   TRI-FOLD INTRO
+   ========================================================== */
+
+    .fold {
+      display: grid;
+      grid-template-columns: 1.1fr 1.15fr 1.15fr;
+      height: clamp(420px, 58vh, 500px);
+      min-height: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -28px rgba(42, 33, 16, .45);
+    }
+
+    .f1,
+    .f2 {
+      padding: clamp(14px, 2vw, 24px);
+      min-width: 0;
+    }
+
+    .f1 {
+      background: var(--sage);
+      color: var(--cream);
+    }
+
+    .f2 {
+      background: var(--paper);
+      position: relative;
+    }
+
+    .f3 {
+      position: relative;
+      min-height: 0;
+      background: linear-gradient(180deg,
+          var(--sky) 0%,
+          #d8c9a8 38%,
+          var(--sand) 55%,
+          var(--terra) 78%,
+          #5a2c18 100%);
+    }
+
+    .f3 .vt2 {
+      position: absolute;
+      right: 12px;
+      bottom: 30px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font: 400 clamp(30px, 3.5vw, 48px)/.92 var(--serif);
+      color: var(--cream);
+      text-transform: uppercase;
+    }
+
+    .f3 .sunmark {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      color: var(--cream);
+      width: 48px;
+      height: 30px;
+    }
+
+    .f3 .mark {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      color: var(--cream);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .q {
+      margin-top: 8px;
+    }
+
+    .q .pill {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      font-size: 12px;
+      padding: 22px 11px;
+      line-height: 1.3;
+    }
+
+    .q p {
+      margin: 6px 2px 0;
+      font-size: 12px;
+      color: #dfe6d2;
+      font-weight: 300;
+      line-height: 1.45;
+    }
+
+    .f2 p {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .f2 .squig2 {
+      display: block;
+      width: 100%;
+      max-width: 190px;
+      margin: 5px auto 1px;
+      color: var(--sage);
+    }
+
+    .kv {
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 12px;
+    }
+
+    .kv li {
+      padding: 2px 0;
+    }
+
+    .kv b {
+      font-weight: 600;
+    }
+
+    /* Smaller screens */
+    @media (max-width: 700px) {
+      .fold {
+        grid-template-columns: 1fr 1fr;
+        height: auto;
+      }
+
+      .f1,
+      .f2 {
+        padding: 18px;
+      }
+
+      .f3 {
+        grid-column: 1 / -1;
+        min-height: 220px;
+      }
+    }
+
+
+    /* ==========================================================
+   METHODS
+   ========================================================== */
+
+    .methods {
+      background: var(--sage);
+      color: var(--cream);
+      min-height: 100vh;
+    }
+
+    .methods h2 {
+      color: var(--cream);
+      margin-top: 2px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .step {
+      border: 1.5px solid rgba(244, 238, 220, .35);
+      border-radius: 16px;
+      padding: 18px 17px 10px;
+      transition: .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step:hover {
+      transform: translateY(-4px);
+      background: rgba(244, 238, 220, .06);
+      border-color: var(--sand);
+    }
+
+    .step .no {
+      font: italic 400 48px/1 var(--serif);
+      color: var(--sand);
+    }
+
+    .step .pill {
+      font-size: 12px;
+      padding: 4px 13px;
+      margin: 4px 0 9px;
+      border-color: rgba(244, 238, 220, .55);
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 300;
+      color: #e3e8d8;
+    }
+
+    .note b {
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+
+    /* ==========================================================
+   RESULTS
+   ========================================================== */
+
+    .results {
+      background: var(--cream);
+    }
+
+    .results h2 {
+      color: var(--olive);
+    }
+
+    .sub {
+      max-width: 60ch;
+      color: var(--ink-2);
+      margin: 0 0 20px;
+    }
+
+
+    /* ---------- compact activity panel ---------- */
+
+    #bars-panel {
+      width: 100%;
+      margin-top: 22px;
+      padding: 17px 20px 15px;
+    }
+
+    #bars-panel .phead {
+      margin-bottom: 7px;
+    }
+
+    #bars {
+      width: 100%;
+    }
+
+    #bars svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 290px;
+    }
+
+    #yearDetail {
+      margin-top: 7px;
+    }
+
+
+    /* ---------- results middle ---------- */
+
+    .results-middle {
+      display: grid;
+      grid-template-columns: 1.25fr .85fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .results-middle .panel {
+      margin-top: 0;
+    }
+
+
+    /* ---------- word cloud ---------- */
+
+    #cloud-panel {
+      min-width: 0;
+      padding: 17px 20px;
+    }
+
+    #cloud {
+      width: 100%;
+      height: 290px;
+      max-height: 290px;
+      overflow: hidden;
+    }
+
+    #cloud svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ---------- donut ---------- */
+
+    #balance {
+      min-width: 0;
+      padding: 17px 20px;
+    }
+
+    #balance .donutwrap {
+      min-height: 170px;
+      height: 170px;
+      gap: 12px 18px;
+    }
+
+    #donut {
+      max-height: 170px;
+    }
+
+    #donut svg {
+      max-width: 100%;
+      max-height: 170px;
+      color: red;
+    }
+
+
+    /* ==========================================================
+   GRID
+   ========================================================== */
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .s12 {
+      grid-column: span 12;
+    }
+
+    .s7 {
+      grid-column: span 7;
+    }
+
+    .s5 {
+      grid-column: span 5;
+    }
+
+
+    .findings {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .fnd {
+      border-top: 2px solid var(--olive);
+      padding-top: 9px;
+    }
+
+    .fnd .n {
+      font: 400 clamp(38px, 4vw, 54px)/1 var(--serif);
+      color: var(--terra);
+    }
+
+    .fnd p {
+      margin: 5px 0 0;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+    .fnd p b {
+      color: var(--ink);
+    }
+
+
+
+    /* ==========================================================
+   PANELS
+   ========================================================== */
+
+    .panel {
+      position: relative;
+      margin-top: 22px;
+      border-radius: 0 14px 14px 14px;
+      padding: 17px 20px 18px;
+      min-width: 0;
+    }
+
+    .panel.paper {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+    }
+
+    .panel.dark {
+      background: var(--olive);
+      color: var(--cream);
+    }
+
+    .panel.sage {
+      background: var(--sage);
+      color: var(--cream);
+    }
+
+    .ptab {
+      position: absolute;
+      left: -1.5px;
+      bottom: 100%;
+      height: 27px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-radius: 11px 11px 0 0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .paper .ptab {
+      background: var(--terra);
+      color: #fff;
+    }
+
+    .dark .ptab {
+      background: var(--sand);
+      color: var(--olive-d);
+    }
+
+    .sage .ptab {
+      background: var(--cream);
+      color: var(--sage-d);
+    }
+
+    .phead {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px 18px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .phead h4 {
+      margin: 0;
+      font: 400 clamp(22px, 2.5vw, 30px)/1.05 var(--serif);
+    }
+
+    .phead p {
+      margin: 4px 0 0;
+      font-size: 12.5px;
+      max-width: 52ch;
+      opacity: .8;
+    }
+
+    .seg {
+      display: inline-flex;
+      border: 1.5px solid currentColor;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: 600 11.5px var(--sans);
+      padding: 6px 13px;
+      cursor: pointer;
+      opacity: .75;
+    }
+
+    .seg button[aria-pressed=true] {
+      background: var(--olive);
+      color: var(--cream);
+      opacity: 1;
+    }
+
+    .dark .seg button[aria-pressed=true] {
+      background: var(--cream);
+      color: var(--olive);
+    }
+
+    .legendrow {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 11.5px;
+      margin: 0 0 4px;
+    }
+
+    .legendrow i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      margin-right: 5px;
+      vertical-align: -1px;
+    }
+
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    svg text {
+      font-family: var(--sans);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar {
+      cursor: pointer;
+      outline: none;
+    }
+
+    .bar .shape {
+      transition: opacity .2s, filter .2s;
+    }
+
+    .bar:hover .shape,
+    .bar:focus-visible .shape {
+      filter: brightness(1.15);
+    }
+
+    .js .barshape {
+      transform-box: fill-box;
+      transform-origin: bottom;
+      transform: scaleY(0);
+    }
+
+    .show .barshape,
+    .rv.show .barshape {
+      animation: grow .9s cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    @keyframes grow {
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    .detail {
+      margin: 7px 0 0;
+      font-size: 12.5px;
+      min-height: 19px;
+    }
+
+    .detail b {
+      font-weight: 600;
+    }
+
+    .word {
+      cursor: default;
+      outline: none;
+      transition: opacity .2s;
+    }
+
+    .hov .word {
+      opacity: .22;
+    }
+
+    .hov .word.on {
+      opacity: 1;
+    }
+
+    .donutwrap {
+      display: flex;
+      gap: 12px 18px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dl {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      flex: 1 1 150px;
+    }
+
+    .dl li {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(244, 238, 220, .2);
+    }
+
+    .dl i {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex: none;
+    }
+
+    .dl b {
+      margin-left: auto;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .dl span.p {
+      opacity: .75;
+      min-width: 46px;
+      text-align: right;
+    }
+
+    .dots {
+      margin-top: 10px;
+    }
+
+    .dots p {
+      margin: 0 0 6px;
+      font-size: 11.5px;
+      opacity: .85;
+    }
+
+    .dot {
+      transition: r .2s;
+    }
+
+    .fl {
+      animation: pulse 1.8s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: .45;
+      }
+    }
+
+    .model-panel {
+      margin-top: 14px;
+      padding: 17px 20px 18px;
+    }
+
+    .model-panel .phead {
+      margin-bottom: 7px;
+    }
+
+    .model-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+
+    .model-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .model-table th,
+    .model-table td {
+      padding: 7px 9px;
+      text-align: center;
+      border-bottom: 1px solid rgba(42, 33, 16, .12);
+    }
+
+    .model-table th:first-child {
+      text-align: left;
+    }
+
+    .model-table thead th {
+      font-family: "DM Mono", monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 500;
+      color: #5b5239;
+    }
+
+    .model-table tbody th {
+      font-weight: 600;
+    }
+
+    .model-table tbody tr:last-child th,
+    .model-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .model-table .best-model {
+      background: rgba(200, 96, 44, .08);
+    }
+
+    .model-table .best-model th {
+      color: var(--terra-d);
+    }
+
+    .model-note {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      margin-top: 9px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(42, 33, 16, .12);
+    }
+
+    .model-note-label {
+      flex: 0 0 auto;
+      font-family: "DM Mono", monospace;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--terra-d);
+    }
+
+    .model-note p {
+      margin: 0;
+      max-width: 760px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+
+    /* ==========================================================
+   CONCLUSION
+   ========================================================== */
+    .concl {
+      background: var(--olive);
+      color: var(--cream);
+      overflow: hidden;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-block: clamp(40px, 4vh, 48px);
+    }
+
+    .concl .in {
+      width: 100%;
+    }
+
+    .concl .eyebrow {
+      margin-top: 20px;
+      margin-bottom: clamp(6px, 1.4vh, 14px);
+    }
+
+    .concl h2 {
+      color: var(--cream);
+    }
+
+    .rq {
+      border-left: 3px solid var(--sand);
+      padding: 4px 0 4px 18px;
+      max-width: 100ch;
+      margin: 0 0 clamp(20px, 3.4vh, 34px);
+      font: 500 clamp(18px, 3vh, 28px)/1.8 var(--serif);
+      color: #e9e1c6;
+    }
+
+    .take {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .tk {
+      border: 1.5px solid rgba(244, 238, 220, .35);
+      border-radius: 16px;
+      padding: clamp(14px, 2.4vh, 22px) 18px;
+      transition: .25s;
+    }
+
+    .tk:hover {
+      background: rgba(244, 238, 220, .07);
+      transform: translateY(-4px);
+      border-color: var(--sand);
+    }
+
+    .tk .c {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--terra);
+      display: grid;
+      place-items: center;
+      font: italic 18px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .tk .lbl {
+      font-size: 14px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--sand);
+      margin-bottom: 4px;
+    }
+
+    .tk p {
+      margin: 0;
+      font-size: clamp(16px, 1.9vh, 15px);
+      line-height: 1.5;
+      font-weight: 300;
+      color: #e9e1c6;
+    }
+
+    .tk p b {
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .tk ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      font-size: clamp(13px, 1.9vh, 15px);
+      font-weight: 300;
+      color: #e9e1c6;
+    }
+
+    .tk li+li {
+      margin-top: 6px;
+    }
+
+    .models {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: clamp(10px, 2vh, 16px);
+    }
+
+    .models span {
+      background: var(--terra);
+      border: 1.5px solid var(--terra);
+      color: #fff;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .concl {
+        display: block;
+        min-height: 0;
+        padding-block: 40px;
+      }
+
+      .take {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+
+    /* ==========================================================
+   TEAM
+   ========================================================== */
+    .team {
+      background: var(--cream);
+    }
+
+    .team h2 {
+      color: var(--olive);
+    }
+
+    .crew {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .crew {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .crew {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .mem {
+      background: var(--paper);
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      transition: .25s;
+    }
+
+    .mem:hover {
+      transform: translateY(-4px);
+      border-color: var(--terra);
+    }
+
+    .av {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font: italic 21px var(--serif);
+      background: var(--olive);
+      color: var(--cream);
+      margin-bottom: 10px;
+    }
+
+    .mem:nth-child(even) .av {
+      background: var(--sage);
+    }
+
+    .mem:nth-child(3n) .av {
+      background: var(--terra);
+    }
+
+    .mem h5 {
+      margin: 0;
+      font: 400 21px var(--serif);
+    }
+
+    .mem .role {
+      font-size: 10px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--terra-d);
+      margin: 2px 0 6px;
+    }
+
+    .mem p {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--ink-2);
+    }
+
+
+    /* ==========================================================
+   FOOTER
+   ========================================================== */
+
+    footer {
+      background: var(--olive-d);
+      color: #cfc7aa;
+      padding-block: 25px;
+      font-size: 12px;
+    }
+
+    footer .in {
+      display: flex;
+      gap: 12px 24px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    footer .sunmark {
+      color: var(--sand);
+    }
+
+
+    /* ==========================================================
+   TOOLTIP
+   ========================================================== */
+
+    #tip {
+      position: fixed;
+      z-index: 50;
+      pointer-events: none;
+      background: var(--ink);
+      color: var(--cream);
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 11.5px;
+      line-height: 1.4;
+      max-width: 220px;
+      box-shadow: 0 7px 20px rgba(0, 0, 0, .3);
+    }
+
+    #tip[hidden] {
+      display: none;
+    }
+
+
+    /* ==========================================================
+   RESPONSIVE — TABLET
+   ========================================================== */
+
+    @media (max-width: 980px) {
+
+      .in {
+        max-width: 900px;
+        padding-inline: 20px;
+      }
+
+      .hgrid,
+      .fold {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hgrid {
+        gap: 28px;
+      }
+
+      .dune {
+        min-height: 300px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .s7,
+      .s5 {
+        grid-column: span 12;
+      }
+
+      .results-middle {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .findings {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .take {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .f3 {
+        min-height: 260px;
+      }
+
+    }
+
+
+    /* ==========================================================
+   RESPONSIVE — MOBILE
+   ========================================================== */
+
+    @media (max-width: 700px) {
+
+      .in {
+        padding-inline: 16px;
+      }
+
+      .sp {
+        padding-block: 48px;
+      }
+
+      .top {
+        min-height: 54px;
+        padding: 7px 14px;
+      }
+
+      .brand {
+        font-size: 17px;
+      }
+
+      .nav {
+        gap: 4px;
+      }
+
+      .nav a {
+        padding: 4px 9px;
+        font-size: 10.5px;
+      }
+
+      .hero {
+        margin-top: 54px;
+        padding-block: 20px 38px;
+      }
+
+      h1 {
+        font-size: clamp(50px, 16vw, 76px);
+      }
+
+      .lede {
+        font-size: 14px;
+        margin: 15px 0 18px;
+      }
+
+      .dune {
+        min-height: 250px;
+      }
+
+      .results-middle {
+        grid-template-columns: 1fr;
+      }
+
+      #bars-panel {
+        padding: 14px 15px 13px;
+      }
+
+      #bars svg {
+        max-height: 240px;
+      }
+
+      #cloud {
+        height: 210px;
+        max-height: 210px;
+      }
+
+      #cloud svg {
+        max-height: 210px;
+      }
+
+      #balance .donutwrap {
+        height: 180px;
+        min-height: 180px;
+      }
+
+      #donut svg {
+        max-height: 180px;
+      }
+
+      .model-table {
+        min-width: 620px;
+      }
+
+      .model-note {
+        display: block;
+      }
+
+      .model-note-label {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .findings,
+      .stats {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .stats {
+        gap: 0;
+      }
+
+      .stat {
+        padding: 15px 4px;
+      }
+
+    }
+
+
+    /* ==========================================================
+   VERY SMALL SCREENS
+   ========================================================== */
+
+    @media (max-width: 560px) {
+
+      .steps {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .fold {
+        border-radius: 14px;
+      }
+
+      .f1,
+      .f2 {
+        padding: 20px;
+      }
+
+      .f3 {
+        min-height: 230px;
+      }
+
+      .phead h4 {
+        font-size: 23px;
+      }
+
+      .seg button {
+        padding: 5px 10px;
+        font-size: 10.5px;
+      }
+
+    }
+
+
+    /* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .js .rv {
+        opacity: 1;
+        transform: none;
+      }
+
+      .js .barshape {
+        transform: none;
+      }
+
+      .squig path {
+        stroke-dashoffset: 0;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top">
+    <div class="in">
+      <div class="top">
+        <a class="brand" href="#top"><svg class="sunmark" viewBox="0 0 60 36" aria-hidden="true"></svg><span>Donald
+            Trump's Tweets - Statistical Analysis<br></span></a>
+        <nav class="nav" aria-label="Sections">
+          <a href="#top">Home</a>
+          <a href="#introduction">Motivation</a>
+          <a href="#methods">Processing</a>
+          <a href="#results">Results</a>
+          <a href="#conclusion">Conclusion</a>
+          <a href="#team">Team</a>
+        </nav>
+      </div>
+      <div class="hgrid">
+        <div>
+          <h1>
+            <svg class="squig" viewBox="0 0 150 130" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" aria-hidden="true">
+              <path pathLength="1"
+                d="M8 122 C 60 96, 52 30, 82 30 C 108 30, 96 84, 66 66 C 52 52, 78 22, 120 26 C 150 28, 168 22, 190 18 M174 8 L190 18 L172 28" />
+            </svg>
+            Flagged<em>Tweets</em>
+          </h1>
+          <p class="lede">Thirteen years, 46,694 tweets and one very small herd of flagged ones. Follow the trail
+            through the data and see where they hide.</p>
+          <div class="cta"><a class="pill solid" href="#methods">View Project ↓</a><a class="pill"
+              href="#introduction">Read the motivation</a></div>
+        </div>
+        <div class="dune" aria-hidden="true">
+          <svg viewBox="0 0 300 560" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#6f9db3" />
+                <stop offset=".55" stop-color="#d9c9a6" />
+                <stop offset="1" stop-color="#e8b36f" />
+              </linearGradient>
+            </defs>
+            <rect width="400" height="560" fill="url(#sky)" />
+            <g class="rays" id="rays" stroke="#fff6dc" stroke-opacity=".55" stroke-width="1.6"></g>
+            <circle cx="200" cy="150" r="42" fill="#fff1c9" />
+            <path d="M0 330 C 80 270, 150 300, 230 280 C 300 262, 350 290, 400 270 L400 560 L0 560Z" fill="#dba46a" />
+            <path d="M0 400 C 70 330, 160 340, 240 350 C 310 360, 360 330, 400 340 L400 560 L0 560Z" fill="#c8602c" />
+            <path d="M0 470 C 90 420, 170 430, 250 450 C 320 468, 370 440, 400 430 L400 560 L0 560Z" fill="#8a3d1f" />
+            <path d="M-10 540 C 100 500, 200 510, 410 480 L410 560 L-10 560Z" fill="#3b2412" />
+          </svg>
+          <div class="vt">Exploratory Analysis </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div>
+      <span>46,694 tweets</span><span>2009 to 2021</span><span>250 flagged</span><span>every flag lands in
+        2020</span><span>46,694 tweets</span><span>2009 to 2021</span><span>250 flagged</span><span>every flag lands in
+        2020</span>
+    </div>
+    <div>
+      <span>46,694 tweets</span><span>2009 to 2021</span><span>250 flagged</span><span>every flag lands in
+        2020</span><span>46,694 tweets</span><span>2009 to 2021</span><span>250
+        flagged</span><span>every flag lands in 2020</span>
+    </div>
+  </div>
+
+
+
+  <!-- ============ INTRODUCTION ============ -->
+  <section id="introduction" class="sp" aria-labelledby="h-intro">
+    <div class="in">
+      <span class="eyebrow rv" style="color:var(--terra-d); margin-top: 20px">01 · Research Motivation</span>
+      <h2 id="h-intro" class="rv" style="color:var(--olive)">Questions & Motivations</h2>
+      <div class="fold rv">
+        <div class="f1">
+          <h3>Three <em>questions</em></h3>
+          <div class="q"><a class="pill">What textual characteristics distinguish Donald Trump's flagged tweets from
+              those that were not flagged by Twitter's moderation system between 2009 and 2021?</a></div>
+          <div class="q"><a class="pill">How accurately can natural language processing and machine learning models
+              predict whether a tweet will be flagged based on its textual features?</a></div>
+          <div class="q"><a class="pill">How did the frequency and characteristics of flagged tweets change over time,
+              particularly around the 2020 U.S. presidential election?</a></div>
+        </div>
+        <div class="f2">
+          <h3>About <em>this</em> Project</h3>
+          <p>
+            This project examines the relationship between political communication and platform moderation policies,
+            focusing on Donald Trump's tweets from 2009 to 2021 to predict which are likely to be flagged by Twitter's
+            moderation system.
+            Particularly surrounding the 2020 election, his collection of tweets provides a rich dataset for exploring
+            textual
+            characteristics, using natural language processing and machine learning techniques.
+          </p>
+          <svg class="squig2" viewBox="0 0 300 120" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" aria-hidden="true">
+            <path
+              d="M4 90 C 60 70, 70 30, 120 34 C 160 38, 150 84, 112 76 C 84 70, 100 30, 150 24 C 210 16, 250 60, 296 30" />
+          </svg>
+          <h3 style="margin-top:4px">Dataset <em>notes</em></h3>
+          <ul class="kv">
+            <li><b>Span:</b> 2009 to 2021</li>
+            <li><b>Tweets:</b> 46,694</li>
+            <li><b>Flagged:</b> 250 (0.54%)</li>
+          </ul>
+        </div>
+        <div class="f3" aria-hidden="true">
+          <div class="vt2">Tweet Predictions</div>
+          <svg class="sunmark" viewBox="0 0 80 50"></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METHODS ============ -->
+  <section id="methods" class="methods sp" aria-labelledby="h-meth">
+    <div class="in">
+      <span class="eyebrow rv" style="margin-top: 5px">02 · Processing</span>
+      <h2 id="h-meth" class="rv">Data Processing</h2>
+      <div class="steps">
+        <div class="step rv">
+          <div class="no">01</div><span class="pill">Transform</span>
+          <p>Transform columns "isRetweet", "isDeleted", and "isFlagged" into boolean and remove retweets.</p>
+        </div>
+        <div class="step rv">
+          <div class="no">02</div><span class="pill">Remove</span>
+          <p>Remove stop words and stem/tokenize the text to reduce data dimensionality.</p>
+        </div>
+        <div class="step rv">
+          <div class="no">03</div><span class="pill">Text Processing</span>
+          <p>Conduct TfidVectorizer to transform text data (X) into numerical features, accounting for word importance
+            based on recurrence.
+          </p>
+        </div>
+        <div class="step rv">
+          <div class="no">04</div><span class="pill">Resample</span>
+          <p> Use RandomOverSampler to select random examples from the from the minority class with replacement,
+            supplementing the training data with multiple copies of this instance (note: can increase likelihood of
+            overfitting).</p>
+        </div>
+        <div class="step rv">
+          <div class="no">05</div><span class="pill">Reduction</span>
+          <p>Use TruncatedSVD to reduce dimensions through PCA, transforming our X.</p>
+        </div>
+        <div class="step rv">
+          <div class="no">06</div><span class="pill">Split</span>
+          <p>Split data into 80% training / 20% testing.</p>
+        </div>
+        <div class="step rv">
+          <div class="no">07</div><span class="pill">Assign</span>
+          <p>Use TextBlob to assign sentiment polarity scores to the individual tweets.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results" class="results sp" aria-labelledby="h-res">
+    <div class="in">
+      <span class="eyebrow rv" style="color:var(--terra-d); margin-top: 15px">03 · Results</span>
+      <h2 id="h-res" class="rv">What The <em>Data</em> Shows</h2>
+
+      <div class="grid results-top">
+        <div class="panel paper s12 rv" id="bars-panel">
+          <div class="ptab">Activity</div>
+          <div class="phead">
+            <div>
+              <h4 id="barsTitle">Yearly tweet activity</h4>
+              <p id="barsDescription">
+                How many tweets were posted each year, split by flagged and not flagged.
+              </p>
+            </div>
+            <div class="seg" id="scaleSeg" role="group" aria-label="Time period">
+              <button type="button" data-v="year" aria-pressed="true" class="active">
+                Yearly
+              </button>
+              <button type="button" data-v="month" aria-pressed="false">
+                Monthly
+              </button>
+            </div>
+          </div>
+          <div class="legendrow">
+            <span><i style="background:#4378d4"></i> Not flagged</span>
+            <span> <i style="background:var(--terra)"></i> Flagged</span>
+          </div>
+          <div id="bars"></div>
+          <p class="detail" id="yearDetail" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════
+         WORDS + FLAGGED BALANCE
+         ══════════════════════════════════════════════════════ -->
+      <div class="grid results-middle">
+        <div class="panel dark s7 rv" id="cloud-panel">
+          <div class="phead">
+            <div>
+              <h4>Words that keep coming back</h4>
+              <p>
+                Bigger words appear more often. Sizes are relative.
+              </p>
+            </div>
+          </div>
+
+          <div id="cloud"></div>
+          <p class="detail" id="wordDetail" aria-live="polite">
+            Hover a word to see its rank.
+          </p>
+        </div>
+
+        <div class="panel sage s5 rv" id="balance">
+          <div class="phead">
+            <div>
+              <h4>Flagged vs not flagged</h4>
+              <p>
+                A sliver so thin it needs a magnifying glass.
+              </p>
+            </div>
+          </div>
+          <div class="donutwrap">
+            <div id="donut"></div>
+            <ul class="dl" id="dl"></ul>
+          </div>
+          <div class="dots">
+            <p id="dotCap"></p>
+            <div id="dots"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel paper model-panel rv" id="model-comparison">
+        <div class="phead">
+          <div>
+            <h4>Model performance</h4>
+            <p>
+              Test-set performance across five classification models.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="model-table-wrap">
+          <table class="model-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+                <th>Support</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="best-model" </tr>
+              <tr>
+                <th scope="row" style="color: red" </th>Random Forest</th>
+                <td style="color: red"> 98.53%</td>
+                <td style="color: red"> 0.99</td>
+                <td style="color: red"> 0.99</td>
+                <td style="color: red"> 0.99</td>
+                <td style="color: red"> 18578</td>
+              </tr>
+              </tr>
+              <tr>
+                <th scope="row">KNN</th>
+                <td>98.50%</td>
+                <td>0.99</td>
+                <td>0.98</td>
+                <td>0.98</td>
+                <td>18578</td>
+              </tr>
+              <tr>
+                <th scope="row">Linear SVC</th>
+                <td>97.86%</td>
+                <td>0.97</td>
+                <td>0.97</td>
+                <td>0.97</td>
+                <td>18578</td>
+              </tr>
+              <th scope="row"> Naive Bayes</th>
+              <td>97.39%</td>
+              <td>0.98</td>
+              <td>0.97</td>
+              <td>0.97</td>
+              <td>18578</td>
+              </tr>
+              <tr>
+                <th scope="row">Logistic Regression</th>
+                <td>97.32%</td>
+                <td>0.97</td>
+                <td>0.97</td>
+                <td>0.97</td>
+                <td>18578</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="model-note">
+          <span class="model-note-label">
+            Random Forest
+          </span>
+          <p>
+            The model achieved 98.53% test accuracy, with balanced performance
+            across the two classes. False observations had 1.00 precision and
+            0.97 recall, while True observations had 0.97 precision and
+            1.00 recall.
+          </p>
+        </div>
+      </div>
+      <div class="findings" id="findings"></div>
+    </div>
+  </section>
+
+  <!-- ============ CONCLUSION ============ -->
+  <section id="conclusion" class="concl sp" aria-labelledby="h-con">
+    <div class="in">
+      <span class="eyebrow rv" style="margin-top: 20px">04 · Conclusion</span>
+      <h2 id="h-con" class="rv">What We <em>Take Home</em></h2>
+      <p class="rq rv">Are the frequency and sentiment of certain words in Trump’s tweets predictive of whether
+        Twitter will flag a tweet?</p>
+
+      <div class="take">
+        <div class="tk rv">
+          <div class="c">1</div>
+          <div class="lbl">Results</div>
+          <p><b>Yes, textual characteristics help predict flagged status.</b> Random Forest, KNN and Linear SVC
+            all demonstrate this, and Random Forest had the highest accuracy at 98.53%.</p>
+          <div class="models">
+            <span>Random Forest</span>
+            <span>KNN</span>
+            <span>Linear SVC</span>
+          </div>
+        </div>
+
+        <div class="tk rv">
+          <div class="c">2</div>
+          <div class="lbl">Future projects</div>
+          <p><b>How has moderation changed under X?</b> We could study how platform handling of political
+            disinformation shifted after Elon Musk’s takeover of Twitter (now called X).</p>
+          <ul>
+            <li>What kinds of tweets receive community notes?</li>
+            <li>What words do those tweets use?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEAM ============ -->
+  <section id="team" class="team sp" aria-labelledby="h-team">
+    <div class="in">
+      <span class="eyebrow rv" style="margin-top: 15px">04 · Team</span>
+      <h2 id="h-team" class="rv">Meet the <em>crew</em></h2>
+      <div class="crew" style="margin-bottom:200px">
+
+        <div class="mem rv">
+          <h5>Odeya Russo</h5>
+          <div class="role">Project Manager</div>
+          <p>Coordinates the team, tracks milestones, and manages project deadlines.</p>
+        </div>
+
+        <div class="mem rv">
+          <h5>Suraj Rajan</h5>
+          <div class="role">Data Engineer</div>
+          <p>Collects, cleans, transforms, and organizes data to facilitate the implementation of data pipelines.</p>
+        </div>
+
+        <div class="mem rv">
+          <h5>Vanda Suklar</h5>
+          <div class="role">Data Analyst</div>
+          <p>Explores dataset to identify trends and communicate findings.</p>
+        </div>
+
+        <div class="mem rv">
+          <h5>Masato Ishizuka</h5>
+          <div class="role">Data Scientist</div>
+          <p>Developes hypotheses and builds predictive models.</p>
+        </div>
+
+        <div class="mem rv">
+          <h5>Ryan Largo</h5>
+          <div class="role">Machine Learning Engineer</div>
+          <p>Optimizes models, developes model piplines, and integrates models into applications.</p>
+        </div>
+
+        <div class="mem rv">
+          <h5>Laura Ngo</h5>
+          <div class="role">Data Visualization Specalist</div>
+          <p>Designs charts, dashboards, and presentations to transform statistical analysis into interpretable results.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="in">
+      <span style="display:flex;align-items:center;gap:12px"><svg class="sunmark" viewBox="0 0 60 36"
+          aria-hidden="true"></svg>Donald Trump's Tweets · Exploratory analysis</span>
+    </div>
+  </footer>
+
+  <div id="tip" hidden role="status"></div>
+
+  <script>
+      (function () {
+        'use strict';
+        var $ = function (s, r) { return (r || document).querySelector(s) };
+        var NS = 'http://www.w3.org/2000/svg';
+        function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) { e.setAttribute(k, attrs[k]) } if (parent) { parent.appendChild(e) } return e }
+        function fmt(n) { return Math.round(n).toLocaleString('en-US') }
+        function pct(x, d) { return (x * 100).toFixed(d == null ? 1 : d) + '%' }
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* ---------- DATA ---------- */
+        var DATA = [
+          { y: 2009, n: 56, f: 0 }, { y: 2010, n: 142, f: 0 }, { y: 2011, n: 772, f: 0 }, { y: 2012, n: 3523, f: 0 },
+          { y: 2013, n: 8128, f: 0 }, { y: 2014, n: 5784, f: 0 }, { y: 2015, n: 7536, f: 0 }, { y: 2016, n: 4037, f: 0 },
+          { y: 2017, n: 2292, f: 0 }, { y: 2018, n: 3104, f: 0 }, { y: 2019, n: 4936, f: 0 }, { y: 2020, n: 6280, f: 250 }, { y: 2021, n: 104, f: 0 }
+        ];
+
+        var MONTHLY_DATA = [
+          { m: 1, n: 397, f: 0 },
+          { m: 2, n: 397, f: 0 },
+          { m: 3, n: 447, f: 1 },
+          { m: 4, n: 379, f: 0 },
+          { m: 5, n: 568, f: 3 },
+          { m: 6, n: 542, f: 3 },
+          { m: 7, n: 353, f: 0 },
+          { m: 8, n: 573, f: 1 },
+          { m: 9, n: 724, f: 11 },
+          { m: 10, n: 878, f: 4 },
+          { m: 11, n: 599, f: 170 },
+          { m: 12, n: 423, f: 57 }
+        ];
+        var WORDS = [
+          ['great', 100], ['president', 85], ['thank', 80], ['people', 70], ['all', 64], ['new', 60],
+          ['thanks', 58], ['get', 56], ['america', 50], ['country', 48], ['news', 42], ['out', 40],
+          ['time', 40], ['democrats', 36], ['donald', 34], ['good', 34], ['big', 32], ['make', 32],
+          ['never', 30], ['one', 30], ['obama', 30], ['american', 22], ['going', 22], ['want', 18],
+          ['again', 17], ['job', 16], ['fake', 16], ['years', 16], ['media', 15], ['see', 15],
+          ['china', 14], ['really', 14], ['love', 14], ['win', 14], ['house', 14], ['know', 14],
+          ['run', 12], ['think', 12], ['day', 12], ['need', 12], ['done', 12], ['go', 12],
+          ['way', 12], ['best', 12], ['election', 11], ['last', 10], ['u.s', 10],
+        ];
+
+        var NF = 0, FL = 0; DATA.forEach(function (d) { NF += d.n; FL += d.f });
+        var TOTAL = NF + FL;
+
+        /* ---------- sunbursts ---------- */
+        function sun(svg) {
+          var cx = 30, cy = 34, n = 15;
+          for (var i = 0; i < n; i++) {
+            var a = Math.PI + i * Math.PI / (n - 1), r0 = 9, r1 = i % 2 ? 24 : 30;
+            el('line', { x1: cx + r0 * Math.cos(a), y1: cy + r0 * Math.sin(a), x2: cx + r1 * Math.cos(a), y2: cy + r1 * Math.sin(a), stroke: 'currentColor', 'stroke-width': 1.4, 'stroke-linecap': 'round' }, svg);
+          }
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('.sunmark'), sun);
+        (function () {
+          var g = $('#rays');
+          for (var i = 0; i < 48; i++) {
+            var a = i * Math.PI * 2 / 48;
+            el('line', { x1: 200 + 58 * Math.cos(a), y1: 150 + 58 * Math.sin(a), x2: 200 + (i % 2 ? 150 : 230) * Math.cos(a), y2: 150 + (i % 2 ? 150 : 230) * Math.sin(a) }, g);
+          }
+        })();
+
+        /* ---------- tooltip ---------- */
+        var tip = $('#tip');
+        function showTip(html, x, y) {
+          tip.innerHTML = html; tip.hidden = false;
+          var r = tip.getBoundingClientRect(), l = x + 14, t = y - r.height - 12;
+          if (l + r.width > window.innerWidth - 8) { l = x - r.width - 14 }
+          if (l < 8) { l = 8 }
+          if (t < 8) { t = y + 18 }
+          tip.style.left = l + 'px'; tip.style.top = t + 'px';
+        }
+        function hideTip() { tip.hidden = true }
+        function bindTip(n, fn, onIn, onOut) {
+          n.addEventListener('pointermove', function (e) { showTip(fn(), e.clientX, e.clientY) });
+          n.addEventListener('pointerenter', function () { if (onIn) onIn() });
+          n.addEventListener('pointerleave', function () { hideTip(); if (onOut) onOut() });
+          n.addEventListener('focus', function () { var r = n.getBoundingClientRect(); showTip(fn(), r.left + r.width / 2, r.top); if (onIn) onIn() });
+          n.addEventListener('blur', function () { hideTip(); if (onOut) onOut() });
+        }
+
+        /* ---------- bar chart ---------- */
+        var chartView = 'year';
+        var selYear = null;
+
+        function topRound(x, y, w, h, r) {
+          r = Math.min(r, w / 2, h);
+          return 'M' + x + ',' + (y + h) + 'V' + (y + r) + 'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+            'H' + (x + w - r) + 'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + 'V' + (y + h) + 'Z';
+        }
+
+        function renderBars() {
+          var host = $('#bars');
+          if (!host) return;
+          var monthly = chartView === 'month';
+          var chartData = monthly ? MONTHLY_DATA : DATA;
+          var W = Math.max(300, Math.floor(host.clientWidth || 800));
+          var H = W < 560 ? 240 : 290;
+          var mL = W < 560 ? 40 : 56;
+          var mR = 10;
+          var mT = 40;
+          var mB = 38;
+          var iw = W - mL - mR;
+          var ih = H - mT - mB;
+
+          var maxDataValue = 0;
+          chartData.forEach(function (d) {
+            var total = d.n + d.f;
+            if (total > maxDataValue) { maxDataValue = total; }
+          });
+
+          var step = monthly ? 250 : 2500;
+          var maxValue =
+            Math.ceil(maxDataValue / step) * step;
+          maxValue = Math.max(maxValue, step);
+
+          var ticks = [0, maxValue * 0.25, maxValue * 0.50, maxValue * 0.75, maxValue];
+          var y = function (v) { return mT + ih - (v / maxValue) * ih; };
+          host.innerHTML = '';
+          var svg = el('svg', {
+            viewBox: '0 0 ' + W + ' ' + H,
+            width: W,
+            height: H,
+            role: 'group',
+            'aria-label': monthly
+              ? 'Bar chart of tweets per month, flagged and not flagged'
+              : 'Bar chart of tweets per year, flagged and not flagged'
+          }, host);
+
+          ticks.forEach(function (t) {
+            el('line', {
+              x1: mL, x2: W - mR,
+              y1: y(t), y2: y(t),
+              stroke: '#2a2110', 'stroke-opacity': t === 0 ? 0.5 : 0.12, 'stroke-width': 1
+            }, svg);
+
+            var tx = el('text', {
+              x: mL - 8, y: y(t), 'text-anchor': 'end', 'dominant-baseline': 'central', 'font-size': 11, fill: '#5b5239'
+            }, svg);
+
+
+            if (t >= 1000) {
+              var value = t / 1000;
+              tx.textContent = (value % 1 === 0 ? value : value.toFixed(1)) + 'k';
+            } else {
+              tx.textContent = Math.round(t);
+            }
+          });
+
+          /* ==========================================================
+             BARS
+             ========================================================== */
+
+          var band = iw / chartData.length;
+          var bw = Math.min(
+            34,
+            band * 0.46
+          );
+          var flagX = null;
+          var flagTop = null;
+
+          chartData.forEach(function (d, i) {
+            var cx = mL + band * i + band / 2;
+            var key = monthly ? d.m : d.y;
+            var selected = selYear === key;
+            var dim = selYear !== null && !selected;
+            var label = monthly ? String(d.m) : String(d.y);
+            var g = el('g', {
+              'class': 'bar', tabindex: 0, role: 'button', 'aria-pressed': String(selected),
+              'aria-label': label + ': ' + fmt(d.n) + ' not flagged, ' + fmt(d.f) + ' flagged'
+            }, svg);
+            el('rect', {
+              x: cx - band / 2 + 1,
+              y: mT - 6,
+              width: band - 2,
+              height: ih + mB,
+              fill: 'transparent'
+            }, g);
+
+            var base = y(0);
+            var top = y(d.n);
+            el('path', {
+              'class': 'shape barshape',
+              d: topRound(cx - bw / 2, top, bw, Math.max(1, base - top), 4),
+              fill: '#4378d4',
+              opacity: dim ? 0.3 : 1,
+              style: 'animation-delay:' + (i * 45) + 'ms'
+            }, g);
+
+            /* ========================================================
+               FLAGGED
+               ======================================================== */
+            if (d.f > 0) {
+              var ft = y(d.f);
+              var fx = cx + bw / 2;
+              el('path', {
+                'class': 'shape barshape',
+                d: topRound(fx, ft, bw, Math.max(1, base - ft), 4),
+                fill: '#c8602c',
+                opacity: dim ? 0.3 : 1,
+                style: 'animation-delay:' + (i * 45 + 120) + 'ms'
+              }, g);
+              flagX = fx + bw / 2;
+              flagTop = ft;
+            }
+
+            /* ========================================================
+               X AXIS LABEL
+               ======================================================== */
+            var lt = el('text', {
+              x: cx, y: H - 14, 'text-anchor': 'middle', 'font-size': W < 560 ? 10 : 12, 'font-weight': selected ? 700 : 500,
+              fill: '#2a2110', opacity: dim ? 0.5 : 1
+            }, g);
+
+            if (monthly) {
+              var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+              lt.textContent = monthNames[d.m - 1];
+            } else {
+              lt.textContent = W < 560 ? '’' + String(d.y).slice(2) : d.y;
+            }
+
+            /* ========================================================
+               TOOLTIP
+               ======================================================== */
+            bindTip(g,
+              function () {
+                return '<b>' + label + '</b>' + '<br>Not flagged: ' + fmt(d.n) + (d.f ? '<br>Flagged: ' + fmt(d.f) : '');
+              },
+              null, null
+            );
+            /* ========================================================
+               SELECT BAR
+               ======================================================== */
+            function pick() {
+              selYear = selYear === key ? null : key;
+              renderBars();
+              updateDetail();
+
+            }
+
+            g.addEventListener('click', pick);
+            g.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter' || e.key === ' '
+              ) {
+                e.preventDefault(); pick();
+              }
+            }
+            );
+          });
+
+          /* ==========================================================
+              FLAGGED ANNOTATION — YEARLY ONLY
+              ========================================================== */
+          if (!monthly && flagX !== null) {
+            var lx = Math.min(flagX, W - mR);
+            el('line', {
+              x1: lx - bw / 2, x2: lx - bw / 2,
+              y1: flagTop - 4, y2: mT - 12,
+              stroke: '#c8602c', 'stroke-width': 1.4, 'stroke-dasharray': '3 3'
+            }, svg);
+
+            /* Annotation */
+            var lab = el('text', { x: W - mR, y: mT - 18, 'text-anchor': 'end', 'font-size': 12, 'font-weight': 600, fill: '#9c4420' }, svg);
+            lab.textContent = FL + ' flagged, all in 2020';
+          }
+
+          updateDetail();
+        }
+
+
+        /* ============================================================
+           DETAIL TEXT
+           ============================================================ */
+        function updateDetail() {
+          var d = $('#yearDetail');
+          if (!d) return;
+          /* ==========================================================
+             NOTHING SELECTED
+             ========================================================== */
+          if (selYear === null) {
+            /* ---------- monthly ---------- */
+            if (chartView === 'month') {
+              var peakMonth = MONTHLY_DATA.slice().sort(function (a, b) { return ((b.n + b.f) - (a.n + a.f)); })[0];
+              if (!peakMonth) { d.innerHTML = 'No monthly data available.'; return; }
+              d.innerHTML = 'Busiest month: <b> October</b> with ' + fmt(peakMonth.n + peakMonth.f) + ' tweets. Click a bar to pin a month.';
+            }
+
+
+            /* ---------- yearly ---------- */
+
+            else {
+
+
+              var peak =
+                DATA
+                  .slice()
+                  .sort(function (a, b) {
+
+                    return (
+                      (b.n + b.f) -
+                      (a.n + a.f)
+                    );
+
+                  })[0];
+
+
+              if (!peak) {
+
+                d.innerHTML =
+                  'No yearly data available.';
+
+                return;
+
+              }
+
+
+              d.innerHTML =
+                'Busiest year: <b>' +
+                peak.y +
+                '</b> with ' +
+                fmt(
+                  peak.n +
+                  peak.f
+                ) +
+                ' tweets. Click a bar to pin a year.';
+
+            }
+            return;
+
+          }
+
+
+          /* ==========================================================
+             MONTHLY DETAIL
+             ========================================================== */
+
+          if (chartView === 'month') {
+
+
+            var month =
+              MONTHLY_DATA.filter(
+                function (x) {
+
+                  return x.m === selYear;
+
+                }
+              )[0];
+
+
+            if (!month) return;
+
+
+            var monthTotal =
+              month.n +
+              month.f;
+
+
+            d.innerHTML =
+              '<b>Month ' +
+              month.m +
+              '</b> · ' +
+              fmt(monthTotal) +
+              ' tweets' +
+
+              (
+                month.f
+
+                  ? ' · ' +
+                  fmt(month.f) +
+                  ' flagged (' +
+                  pct(
+                    month.f /
+                    monthTotal
+                  ) +
+                  ' of the month)'
+
+                  : ' · none flagged'
+              );
+
+          }
+
+
+          /* ==========================================================
+             YEARLY DETAIL
+             ========================================================== */
+
+          else {
+            var year =
+              DATA.filter(
+                function (x) {
+
+                  return x.y === selYear;
+
+                }
+              )[0];
+
+
+            if (!year) return;
+
+
+            var total = year.n + year.f;
+            d.innerHTML = '<b>' + year.y + '</b> · ' + fmt(total) + ' tweets · ' + pct(total / TOTAL) + ' of all tweets' + (year.f ? ' · ' + fmt(year.f) + ' flagged (' + pct(year.f / total) + ' of the year)' : ' · none flagged');
+          }
+        }
+        /* ============================================================
+           YEARLY / MONTHLY TOGGLE
+           ============================================================ */
+        (function () {
+          var toggle = document.getElementById('scaleSeg');
+
+          if (!toggle) return;
+          var buttons = toggle.querySelectorAll('button');
+
+          buttons.forEach(
+            function (button) {
+              button.addEventListener('click',
+                function () {
+                  chartView = button.getAttribute('data-v');
+                  selYear = null;
+                  buttons.forEach(
+                    function (btn) {
+                      var active = btn.getAttribute('data-v') === chartView;
+                      btn.setAttribute('aria-pressed', String(active));
+                      btn.classList.toggle('active', active);
+                    }
+                  );
+
+                  /* ==================================================
+                     UPDATE TITLE + DESCRIPTION
+                     ================================================== */
+                  var heading = document.getElementById('barsTitle');
+                  var description = document.getElementById('barsDescription');
+                  if (chartView === 'month') {
+                    if (heading) {
+                      heading.textContent = 'Monthly tweet activity';
+                    }
+                    if (description) {
+                      description.textContent = 'How many tweets were posted each month in 2020, split by flagged and not flagged.';
+                    }
+                  } else {
+                    if (heading) { heading.textContent = 'Yearly tweet activity'; }
+                    if (description) { description.textContent = 'How many tweets were posted each year, split by flagged and not flagged.'; }
+                  }
+                  renderBars();
+                }
+              );
+            }
+          );
+          buttons.forEach(
+            function (button) {
+              var active =
+                button.getAttribute('data-v') === chartView;
+              button.setAttribute('aria-pressed', String(active)
+              );
+              button.classList.toggle('active', active);
+            }
+          );
+        })();
+
+        /* ---------- word cloud ---------- */
+        var PAL = ['#f4eedc', '#e6a766', '#c8602c', '#a9bd9f', '#8fb4c4'];
+        var cvs = document.createElement('canvas').getContext('2d');
+        function layout(items, W, H) {
+          var max = items[0][1], min = items[items.length - 1][1];
+          var maxF = W < 520 ? 56 : 96, minF = W < 520 ? 15 : 19;
+          var placed = [], out = [], ex = Math.min(2.4, W / H * .9);
+          items.forEach(function (it, idx) {
+            var f = minF + (maxF - minF) * Math.pow((it[1] - min) / ((max - min) || 1), .7);
+            var rot = idx > 2 && idx % 7 === 3;
+            for (var attempt = 0; attempt < 14; attempt++) {
+              cvs.font = f + 'px "Instrument Serif", Georgia, serif';
+              var tw = cvs.measureText(it[0]).width + 8, th = f * 1.05 + 4;
+              var bw = rot ? th : tw, bh = rot ? tw : th, found = null;
+              for (var i = 0; i < 2600; i++) {
+                var a = i * .16, r = 1.1 * a;
+                var x = W / 2 + r * Math.cos(a) * ex, yy = H / 2 + r * Math.sin(a);
+                var x0 = x - bw / 2, y0 = yy - bh / 2;
+                if (x0 < 4 || y0 < 4 || x0 + bw > W - 4 || y0 + bh > H - 4) continue;
+                var hit = false;
+                for (var k = 0; k < placed.length; k++) { var p = placed[k]; if (x0 < p.x1 && x0 + bw > p.x0 && y0 < p.y1 && y0 + bh > p.y0) { hit = true; break } }
+                if (!hit) { found = { x: x, y: yy, x0: x0, y0: y0, x1: x0 + bw, y1: y0 + bh }; break }
+              }
+              if (found) { placed.push(found); out.push({ w: it[0], s: it[1], x: found.x, y: found.y, f: f, rot: rot, rank: idx + 1, c: PAL[idx % PAL.length] }); break }
+              f *= .92; if (f < 11) break;
+            }
+          });
+          return out;
+        }
+        function renderCloud() {
+          var host = $('#cloud');
+          var W = Math.max(280, Math.floor(host.clientWidth || 700)), H = W < 520 ? 440 : 400;
+          var laid = layout(WORDS, W, H);
+          host.innerHTML = '';
+          var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'group', 'aria-label': 'Word cloud of the most frequent words, sized by frequency' }, host);
+          var detail = $('#wordDetail');
+          laid.forEach(function (p) {
+            var t = el('text', { 'class': 'word', x: p.x, y: p.y, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'font-size': p.f, fill: p.c, tabindex: 0, 'aria-label': p.w + ', rank ' + p.rank }, svg);
+            t.style.fontFamily = '"Instrument Serif", Georgia, serif';
+            if (p.rot) { t.setAttribute('transform', 'rotate(-90 ' + p.x + ' ' + p.y + ')') }
+            t.textContent = p.w;
+            function on() { svg.setAttribute('class', 'hov'); t.setAttribute('class', 'word on'); detail.innerHTML = '<b>“' + p.w + '”</b> · rank #' + p.rank + ' of ' + WORDS.length }
+            function off() { svg.removeAttribute('class'); t.setAttribute('class', 'word'); detail.textContent = 'Hover a word to see its rank.' }
+            t.addEventListener('pointerenter', on); t.addEventListener('pointerleave', off);
+            t.addEventListener('focus', on); t.addEventListener('blur', off);
+          });
+        }
+
+        /* ---------- donut + dots ---------- */
+        function polar(cx, cy, r, a) { return [cx + r * Math.cos(a), cy + r * Math.sin(a)] }
+        function arc(cx, cy, r0, r1, a0, a1) {
+          var p0 = polar(cx, cy, r1, a0), p1 = polar(cx, cy, r1, a1), p2 = polar(cx, cy, r0, a1), p3 = polar(cx, cy, r0, a0), lg = (a1 - a0) > Math.PI ? 1 : 0;
+          return 'M' + p0[0] + ' ' + p0[1] + 'A' + r1 + ' ' + r1 + ' 0 ' + lg + ' 1 ' + p1[0] + ' ' + p1[1] + 'L' + p2[0] + ' ' + p2[1] + 'A' + r0 + ' ' + r0 + ' 0 ' + lg + ' 0 ' + p3[0] + ' ' + p3[1] + 'Z';
+        }
+        function renderDonut() {
+          var host = $('#donut'); host.innerHTML = '';
+          var s = 190, c = 95, R = 86, r0 = 58, fshare = FL / TOTAL, aStart = -Math.PI / 2;
+          var svg = el('svg', { viewBox: '0 0 ' + s + ' ' + s, width: s, height: s, role: 'img', 'aria-label': 'Donut chart: ' + pct(fshare, 2) + ' flagged, ' + pct(1 - fshare, 2) + ' not flagged' }, host);
+          var split = aStart + Math.PI * 2 * (1 - fshare);
+          el('path', { d: arc(c, c, r0, R, aStart, split) }, svg).setAttribute('fill', '#4378d4');
+          var fp = el('path', { d: arc(c, c, r0 - 4, R + 8, split, aStart + Math.PI * 2 - .0001), fill: '#e6a766' }, svg);
+          bindTip(fp, function () { return '<b>Flagged</b><br>' + fmt(FL) + ' tweets · ' + pct(fshare, 2) });
+          var t1 = el('text', { x: c, y: c - 8, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700, 'letter-spacing': '0.1em', fill: '#f4eedc', opacity: .8 }, svg); t1.textContent = 'FLAGGED';
+          var t2 = el('text', { x: c, y: c + 24, 'text-anchor': 'middle', 'font-size': 34, fill: '#f4eedc' }, svg); t2.style.fontFamily = '"Instrument Serif", serif'; t2.textContent = pct(fshare, 2);
+          $('#dl').innerHTML =
+            '<li><i style="background:#4378d4"></i>Not flagged<b>' + fmt(NF) + '</b><span class="p">' + pct(1 - fshare, 2) + '</span></li>' +
+            '<li><i style="background:#e6a766"></i>Flagged<b>' + fmt(FL) + '</b><span class="p">' + pct(fshare, 2) + '</span></li>';
+        }
+        function renderDots() {
+          var host = $('#dots'); host.innerHTML = '';
+          var cols = 50, rows = 20, pitch = 10;
+          var per = Math.round(FL / TOTAL * 1000);
+          var seed = 11; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
+          var pick = {}; while (Object.keys(pick).length < per) { pick[Math.floor(rnd() * cols * rows)] = 1 }
+          var svg = el('svg', { viewBox: '0 0 ' + cols * pitch + ' ' + rows * pitch, width: '100%', role: 'img', 'aria-label': '1,000 dots, ' + per + ' highlighted as flagged' }, host);
+          for (var i = 0; i < cols * rows; i++) {
+            var x = (i % cols) * pitch + pitch / 2, y = Math.floor(i / cols) * pitch + pitch / 2;
+            if (pick[i]) {
+              var d = el('circle', { 'class': 'fl', cx: x, cy: y, r: 4.2, fill: '#e6a766', stroke: '#f4eedc', 'stroke-width': 1.2 }, svg);
+              bindTip(d, function () { return '<b>A flagged tweet</b><br>About ' + per + ' in every 1,000' });
+            } else {
+              el('circle', { cx: x, cy: y, r: 2.8, fill: '#f4eedc', opacity: .38 }, svg);
+            }
+          }
+          $('#dotCap').textContent = 'Picture 1,000 tweets. About ' + per + ' would be flagged, roughly 1 in every ' + fmt(TOTAL / FL) + '.';
+        }
+
+        /* ---------- findings ---------- */
+        function renderFindings() {
+          var peak = DATA.slice().sort(function (a, b) { return (b.n + b.f) - (a.n + a.f) })[0];
+          var y20 = DATA.filter(function (d) { return d.f > 0 })[0];
+          var items = [
+            [String(2020), '<b>Only year</b> with ' + ' flagged tweets.'],
+            ['“' + WORDS[0][0] + '”', 'is the <b>biggest word</b>, followed by “' + WORDS[1][0] + '” and “' + WORDS[2][0] + '”.'],
+            [pct(FL / TOTAL, 2), 'of all tweets are <b>flagged</b>, about 1 in ' + fmt(TOTAL / FL) + '.'],
+            ['98.53%', '<b>Random forest</b> had the highest accuracy of all models tested.']
+          ];
+          $('#findings').innerHTML = items.map(function (f) { return '<div class="fnd rv"><div class="n">' + f[0] + '</div><p>' + f[1] + '</p></div>' }).join('');
+        }
+
+        /* ---------- counters + reveal ---------- */
+        function countUp(n) {
+          var to = parseFloat(n.getAttribute('data-to')), dec = parseInt(n.getAttribute('data-dec') || '0', 10), suf = n.getAttribute('data-suf') || '';
+          function paint(v) { n.textContent = (dec ? v.toFixed(dec) : Math.round(v).toLocaleString('en-US')) + suf }
+          if (reduce) { paint(to); return }
+          var t0 = null;
+          function step(t) { if (t0 === null) t0 = t; var p = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - p, 3); paint(to * e); if (p < 1) requestAnimationFrame(step) }
+          requestAnimationFrame(step);
+        }
+        function observe() {
+          var rv = document.querySelectorAll('.rv');
+          if (!('IntersectionObserver' in window)) { Array.prototype.forEach.call(rv, function (n) { n.classList.add('show') }); return }
+          var io = new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (!e.isIntersecting) return;
+              e.target.classList.add('show');
+              var c = e.target.querySelector('[data-to]'); if (c) countUp(c);
+              io.unobserve(e.target);
+            });
+          }, { threshold: .15 });
+          Array.prototype.forEach.call(rv, function (n) { io.observe(n) });
+        }
+
+        /* ---------- boot ---------- */
+        renderFindings(); renderDonut(); renderDots(); renderBars(); renderCloud(); observe();
+        if (document.fonts && document.fonts.ready) { document.fonts.ready.then(function () { renderBars(); renderCloud() }) }
+        var lastW = 0, raf = 0;
+        if (window.ResizeObserver) {
+          new ResizeObserver(function () {
+            cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(function () {
+              var w = Math.floor($('#bars').clientWidth);
+              if (w && Math.abs(w - lastW) > 1) { lastW = w; renderBars(); renderCloud() }
+            });
+          }).observe($('#bars'));
+        }
+      })();
+  </script>
+</body>
+
+</html>

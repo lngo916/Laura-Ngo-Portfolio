@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Laura Ngo — Data Analyst portfolio.">
+    <title>Laura Ngo — Data Analyst</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-theme="dark">
+    <div class="noise"></div>
+    <div class="cursor"></div>
+    <div class="cursor-ring"></div>
+    <header class="nav"><a href="#home" class="brand">LAURA NGO</a>
+        <div class="nav-status"></div>
+            <button type="button" class="theme-toggle"
+            aria-label="Switch to light mode" title="Switch to light mode" aria-pressed="false"><span
+                class="sun">☼</span><span class="moon">☾</span></button><button class="menu">MENU</button>
+        <nav>
+            <a href="#home">HOME</a>
+            <a href="#work">PROJECTS</a>
+            <a href="#about">ABOUT</a>
+            <a href="#skills">STACK</a>
+            <a href="#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-------- HOME PAGE --------->
+        <section id="home" class="hero">
+            <div class="hero-left">
+                <h1>DATA<br><em>INTO</em><br><strong>INSIGHT.</strong></h1>
+                <p class="intro">
+                    I apply statistical analysis, data modeling, and
+                    analytical systems to transform complex datasets into
+                    actionable insights and informed decisions.
+                </p>
+                <div class="hero-links">
+                    <a href="#work" class="pill lime">EXPLORE WORK <b>↘</b></a><a
+                        href="https://www.linkedin.com/in/laura-ngo-09799a182/" target="_blank" class="under">LINKEDIN
+                        ↗</a>
+                    <a href="https://github.com/lngo916" target="_blank" class="under">GITHUB ↗</a>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="orb">
+                    <div class="orb-core">DATA<br><span>→</span><br>DECISION</div>
+                    <div class="orb-ring r1"></div>
+                    <div class="orb-ring r2"></div>
+                    <div class="orb-ring r3"></div>
+                    <div class="node n1"></div>
+                    <div class="node n2"></div>
+                    <div class="node n3"></div>
+                </div>
+                <div class="floating f1"><small>MODEL AUC</small><strong>0.91</strong><i>STEAM RETENTION</i></div>
+                <div class="floating f2"><small>DATA SCALE</small><strong>43 GB</strong><i>BEHAVIORAL DATA</i></div>
+                <div class="floating f3"><small>RESEARCH</small><strong>2,400</strong><i>STUDENT RECORDS</i></div>
+            </div>
+        </section>
+
+        <section class="marquee">
+            <div class="marquee-track">
+
+                <div class="marquee-content">
+                    <span>PYTHON <b>✦</b></span>
+                    <span>SQL <b>✦</b></span>
+                    <span>R <b>✦</b></span>
+                    <span>PYSPARK <b>✦</b></span>
+                    <span>TABLEAU <b>✦</b></span>
+                    <span>MACHINE LEARNING <b>✦</b></span>
+                    <span>DATA STORYTELLING <b>✦</b></span>
+                </div>
+
+                <div class="marquee-content" aria-hidden="true">
+                    <span>PYTHON <b>✦</b></span>
+                    <span>SQL <b>✦</b></span>
+                    <span>R <b>✦</b></span>
+                    <span>PYSPARK <b>✦</b></span>
+                    <span>TABLEAU <b>✦</b></span>
+                    <span>MACHINE LEARNING <b>✦</b></span>
+                    <span>DATA STORYTELLING <b>✦</b></span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-------- WORK --------->
+        <section id="work" class="work section">
+            <div class="section-top">
+                <div><span class="eyebrow"><span>02</span> SELECTED WORK</span>
+                    <h2>PROJECTS<br></h2>
+                </div>
+                <p>Projects where statistical reasoning, engineering, and communication meet.</p>
+            </div>
+            <div class="project-grid">
+                <!-- Steam: Player Retention -->
+                <article class="project big" data-num="01">
+                    <div class="project-art steam-art">
+                        <div class="chart-card">
+                            <div class="chart-card-title">AUC-ROC by model</div>
+                            <div class="chart-card-sub">Validation set — higher is better</div>
+
+                            <div class="chart-legend">
+                                <span class="legend-item">
+                                    <span class="legend-swatch xgb"></span>
+                                    XGBoost
+                                </span>
+
+                                <span class="legend-item">
+                                    <span class="legend-swatch rf"></span>
+                                    Random Forest
+                                </span>
+
+                                <span class="legend-item">
+                                    <span class="legend-swatch logreg"></span>
+                                    Logistic Regression
+                                </span>
+
+                                <span class="legend-item">
+                                    <span class="legend-swatch svm"></span>
+                                    SVM
+                                </span>
+                            </div>
+
+                            <div class="auc-chart-container">
+                                <canvas id="portfolioAucChart" role="img"
+                                    aria-label="Bar chart showing AUC-ROC scores for XGBoost, Random Forest, Logistic Regression, Decision Tree, and SVM">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-info">
+                        <span class="type">
+                            GRADUATE CAPSTONE / MACHINE LEARNING
+                        </span>
+
+                        <h3>
+                            Steam Player<br>Retention
+                        </h3>
+
+                        <p>
+                            End-to-end churn analysis using behavioral data, feature engineering,
+                            and machine learning models including XGBoost, Random Forest,
+                            Logistic Regression, and LSTM models, translated into an
+                            interpretable retention story.
+                        </p>
+
+                        <div class="tags">
+                            <span>PYTHON</span>
+                            <span>EXPANSE</span>
+                            <span>MACHINE LEARNING</span>
+                        </div>
+
+                        <a class="project-link"
+                            href="https://lngo916.github.io/DSC-288R-Steam-Player-Retention-CTRLFREAKS/" target="_blank"
+                            rel="noopener noreferrer">
+                            VIEW PROJECT<b>↗</b>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Amazon Reviews -->
+                <article class="project" data-num="02">
+                    <div class="project-art amazon-art">
+                        <div class="amazon-image">
+                            <img src="images/truck.webp" alt="Amazon Reviews project visualization">
+                        </div>
+
+                        <div class="globe-overlay">
+                            <span>REVIEWS PROCESSED</span>
+                            <strong>102.9M REVIEWS</strong>
+                        </div>
+                        <span class="art-label">
+                            PYSPARK / MACHINE LEARNING
+                        </span>
+                    </div>
+
+                    <div class="project-info">
+                        <span class="type">
+                            LARGE-SCALE MACHINE LEARNING
+                        </span>
+                        <h3>
+                            Amazon Review<br>Rating Prediction
+                        </h3>
+                        <p>
+                            Processed and analyzed more than 102 million Amazon U.S. reviews using
+                            PySpark, feature engineering, and distributed machine learning to predict
+                            review ratings from textual and metadata features.
+                        </p>
+                        <div class="tags">
+                            <span>PYSPARK</span>
+                            <span>PYTHON</span>
+                            <span>MACHINE LEARNING</span>
+                            <span>BIG DATA</span>
+                        </div>
+                        <a class="project-link" href="https://lngo916.github.io/DSC-232R-Amazon-Reviews/"
+                            target="_blank" rel="noopener noreferrer">
+                            VIEW PROJECT<b>↗</b>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Earthquakes -->
+                <article class="project" data-num="03">
+                    <div class="project-art earthquake-art">
+
+                        <div class="earthquake-globe">
+                            <svg id="portfolioEarthquakeGlobe" aria-label="Rotating globe showing earthquake activity">
+                            </svg>
+                            <div class="globe-overlay">
+                                <span>SEISMIC DATA</span>
+                                <strong>EARTHQUAKE<br>ACTIVITY</strong>
+                            </div>
+                        </div>
+                        <span class="art-label">
+                            GEOSPATIAL DATA / VISUALIZATION
+                        </span>
+                    </div>
+                    <div class="project-info">
+                        <span class="type">
+                            DATA VISUALIZATION / GEOSPATIAL ANALYSIS
+                        </span>
+                        <h3>
+                            Earthquake<br>Monitoring
+                        </h3>
+                        <p>
+                            Interactive geospatial visualization exploring global seismic activity,
+                            monitoring station coverage, earthquake magnitudes, and geographic
+                            patterns through interactive maps and data-driven visualizations.
+                        </p>
+
+                        <div class="tags">
+                            <span>JAVASCRIPT</span>
+                            <span>GEOSPATIAL DATA</span>
+                            <span>DATA VISUALIZATION</span>
+                            <span>USGS</span>
+                        </div>
+
+                        <a class="project-link" href="https://lngo916.github.io/DSC-209R-Bang-Sing-Se/" target="_blank"
+                            rel="noopener noreferrer">
+                            VIEW PROJECT<b>↗</b>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="more-projects">
+                <a href="projects/projects.html" class="more-projects-link">
+                    <span>MORE PROJECTS</span>
+                    <b>↗</b>
+                </a>
+            </div>
+        </section>
+
+        <!-------- ABOUT --------->
+        <section id="about" class="about section">
+            <div class="about-copy"><span class="eyebrow"><span>03</span> THE ANALYST</span>
+                <h2>CURIOUS BY<br><em>DEFAULT.</em></h2>
+                <p class="big-copy">The most interesting part of analytics isn't the model. It's understanding what the
+                    model changes.</p>
+                <p>I bring a background in statistics and data science with experience spanning research, operational
+                    analytics, machine learning, and technical storytelling. I enjoy taking ambiguous questions,
+                    structuring the data behind them, and communicating what the numbers actually mean.</p>
+                <p>My approach is rigorous without losing sight of the person who needs to act on the result.</p>
+            </div>
+            <div class="about-panel">
+                <div class="stat"><span>GRADUATE EDUCATION</span><strong>M.S. DATA SCIENCE </strong><small>UC SAN DIEGO</small>
+                </div>
+                <div class="stat"><span>UNDERGRADUATE EDUCATION</span><strong>B.S. STATISTICS & DATA SCIENCE</strong><small>UCLA</small></div>
+                <div class="stat"><span>FOCUS</span><strong>ANALYTICS / ML</strong><small>DATA → DECISIONS</small></div>
+                <a href="resume.pdf" target="_blank" class="resume">OPEN RÉSUMÉ <b>↗</b></a>
+            </div>
+        </section>
+
+        <section id="skills" class="stack section">
+            <div class="section-top">
+                <div><span class="eyebrow"><span>04</span> TECHNICAL STACK</span>
+                    <h2>TOOLS FOR<br><em>THE JOB.</em></h2>
+                </div>
+            </div>
+            <div class="stack-cloud">
+                <span>PYTHON</span><span>SQL</span><span>R</span><span>PYSPARK</span><span>TABLEAU</span>
+                <span>EXCEL</span><span>SCIKIT-LEARN</span><span>PANDAS
+
+                </span><span>NUMPY</span><span>MACHINE LEARNING</span><span>JAVASCRIPT</span>
+                <span>HTML/CSS</span><span>GITHUB</span><span>POSTGRESQL</span><span>DBEAVER</span><span>JUPYTER</span><span>COLAB</span>
+                <span>AI AGENTS</span><span>PROMPT ENGINEERING</span>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="contact-inner"><span class="eyebrow"><span>05</span> CONTACT</span>
+                <h2>LET'S MAKE<br><em>DATA USEFUL.</em></h2>
+                <p>I'm looking for a team where analytical work has a real audience — and a real impact.</p>
+                <div class="contact-row"><a href="mailto:Lngo916@gmail.com" class="email">Lngo916@gmail.com
+                        <b>↗</b></a><a href="https://www.linkedin.com/in/laura-ngo-09799a182/" target="_blank">LINKEDIN
+                        ↗</a><a href="https://github.com/lngo916" target="_blank">GITHUB ↗</a></div>
+            </div>
+            <div class="contact-mark">LN<span>.</span></div>
+        </section>
+    </main>
+    <footer><span>© <b id="year"></b> LAURA NGO</span><span>DATA / ANALYTICS / STORYTELLING</span><a href="#home">BACK
+            TO TOP ↑</a></footer>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

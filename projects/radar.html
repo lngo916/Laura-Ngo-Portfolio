@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MLBB Radar Chart</title>
+
+  <!-- D3 -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <style>
+    /* =========================================================
+       GLOBAL
+       ========================================================= */
+
+    :root {
+      --color-highlight: bisque;
+      --color-accent: blue;
+      color-scheme: light dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+      line-height: 1.4;
+      margin: 0 auto;
+      padding: 12px 20px;
+      max-width: 1600px;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    /* =========================================================
+       HEADER (title + theme selector on one row)
+       ========================================================= */
+
+    .top {
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.2;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .page-description {
+      max-width: 900px;
+      margin: 2px 0 0;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    label.color-scheme {
+      flex: none;
+      font-size: 14px;
+    }
+
+    label.color-scheme select {
+      min-width: 100px;
+      padding: 5px 8px;
+      font-size: 14px;
+    }
+
+    /* =========================================================
+       HERO SELECTORS
+       ========================================================= */
+
+    .search-container {
+      flex: none;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-select {
+      min-width: 150px;
+      padding: 7px 10px;
+      font-size: 14px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      background: Canvas;
+      color: CanvasText;
+      cursor: pointer;
+    }
+
+    .hero-select:focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* =========================================================
+       RESET BUTTON
+       ========================================================= */
+
+    #reset-btn {
+      padding: 7px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background: #d33;
+      color: white;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    #reset-btn:hover {
+      background: #b22;
+      transform: translateY(-1px);
+    }
+
+
+    /* =========================================================
+       RADAR LAYOUT
+       One grid row that stretches to fill the remaining height.
+       ========================================================= */
+
+    .chart-container {
+      flex: 1 1 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 340px;
+      grid-template-rows: minmax(0, 1fr);
+      gap: 12px;
+      width: 100%;
+      padding-right: 12px;
+    }
+
+
+    /* =========================================================
+       LEGEND
+       ========================================================= */
+
+    #legend-container {
+      width: 100%;
+      height: auto;
+      align-self: start;
+      overflow: visible;
+    }
+
+    .legend-item {
+      cursor: pointer;
+    }
+
+    .legend-item text {
+      fill: currentColor;
+    }
+
+    .legend-item .legend-role {
+      font-weight: 400 !important;
+    }
+
+
+    /* =========================================================
+       RADAR SVG
+       The viewBox keeps the aspect ratio, so the chart scales
+       to whatever space the grid cell has.
+       ========================================================= */
+
+    #radar {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .axis line {
+      stroke: #aaa;
+      stroke-width: 1px;
+    }
+
+    .grid {
+      fill: none;
+      stroke: #ddd;
+      stroke-width: 1px;
+    }
+
+    .label {
+      font-size: 12px;
+      text-anchor: middle;
+      fill: currentColor;
+    }
+
+    .area {
+      fill-opacity: 0.3;
+      stroke-width: 2px;
+      transition:
+        fill-opacity 150ms ease,
+        stroke-width 150ms ease;
+    }
+
+    .dot {
+      pointer-events: none;
+    }
+
+
+    /* =========================================================
+       STATS PANEL
+       ========================================================= */
+
+    #stats-panel {
+      align-self: stretch;
+      min-width: 0;
+      min-height: 0;
+      container-type: size;
+      overflow: auto;
+      padding: 2px 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: color-mix(in srgb, Canvas 95%, gray);
+    }
+
+    /* Placeholder message shown before any hover */
+
+    #stats-panel>p {
+      margin: 0;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    /* Hero card: about 23.5em tall, so font-size = panel height / 23.5 */
+
+    .stat-card {
+      height: 39%;
+      padding-left: 10px;
+      border-left: 4px solid transparent;
+      font-size: clamp(9px, calc(100cqh / 23.5), 14px);
+    }
+
+    .stat-card h2 {
+      margin: 0 0 0.5em;
+      font-size: 1.4em;
+    }
+
+    #stats-panel .stat-role {
+      margin: 0 0 0.5em;
+      font-size: 1em;
+    }
+
+    #stats-panel table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1em;
+    }
+
+    #stats-panel td {
+      padding: 0.12em 0.4em;
+    }
+
+    #stats-panel td:first-child {
+      color: #666;
+      white-space: nowrap;
+    }
+
+    body.dark-mode #stats-panel td:first-child {
+      color: #aaa;
+    }
+
+
+    /* =========================================================
+       INSTRUCTIONS / REPORT (compact bottom strip)
+       ========================================================= */
+
+    .bottom-container {
+      flex: none;
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    #instructions,
+    #project-report {
+      padding: 8px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: color-mix(in srgb, Canvas 95%, gray);
+    }
+
+    #instructions {
+      flex: 1;
+      min-width: 0;
+    }
+
+    #instructions summary {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    #instructions ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 20px;
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 13px;
+    }
+
+    #instructions li::before {
+      content: "\2022";
+      margin-right: 6px;
+    }
+
+    #project-report {
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    #project-report h3 {
+      margin: 0 0 2px;
+      font-size: 14px;
+    }
+
+    #project-report a {
+      color: #0077cc;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    #project-report a:hover {
+      text-decoration: underline;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1000px) {
+
+      .chart-container {
+        grid-template-columns: 140px minmax(0, 1fr) 300px;
+        gap: 8px;
+      }
+
+    }
+
+
+    /* Phones: radar on top, legend and stats side by side below it */
+
+    @media (max-width: 750px) {
+
+      body {
+        padding: 10px 12px;
+        gap: 8px;
+      }
+
+      .page-description {
+        display: none;
+      }
+
+      .chart-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      #radar {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+
+      #legend-container {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      #stats-panel {
+        grid-column: 2;
+        grid-row: 2;
+        height: 34dvh;
+        padding: 2px 8px;
+      }
+
+      .hero-select {
+        flex: 1 1 40%;
+        min-width: 0;
+      }
+
+      #reset-btn {
+        flex: 1 1 100%;
+      }
+
+      #project-report {
+        display: none;
+      }
+
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <!-- =======================================================
+       TITLE (theme selector is inserted here by the script)
+       ======================================================== -->
+
+  <header class="top">
+
+    <div>
+
+      <h1 class="page-title">
+        MLBB Hero Radar Chart
+      </h1>
+
+      <p class="page-description">
+        Compare the attributes of up to five Mobile Legends: Bang Bang
+        heroes using an interactive radar chart.
+      </p>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       HERO SELECTORS
+       ======================================================== -->
+
+  <div class="search-container"></div>
+
+
+  <!-- =======================================================
+       RADAR CHART
+       ======================================================== -->
+
+  <div class="chart-container">
+
+    <!-- Legend -->
+    <svg id="legend-container"></svg>
+
+    <!-- Radar -->
+    <svg id="radar"></svg>
+
+    <!-- Stats -->
+    <div id="stats-panel">
+      <p>
+        Hover over a hero on the radar chart or legend to view
+        detailed statistics.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       INSTRUCTIONS + REPORT
+       ======================================================== -->
+
+  <div class="bottom-container">
+
+    <!-- Instructions -->
+
+    <details id="instructions" open>
+
+      <summary>
+        How to use the radar chart
+      </summary>
+
+      <ul>
+        <li>
+          Use the dropdowns above to select up to five heroes.
+        </li>
+
+        <li>
+          Multiple heroes can be compared at the same time.
+        </li>
+
+        <li>
+          Hover over a radar polygon or legend item to highlight
+          a hero.
+        </li>
+
+        <li>
+          Hovering over a hero displays its detailed attributes,
+          win rate, and release year.
+        </li>
+
+        <li>
+          Click <strong>Reset All</strong> to clear the comparison.
+        </li>
+      </ul>
+
+    </details>
+
+
+    <!-- Project Report -->
+
+    <div id="project-report">
+
+      <h3>
+        Team Project Report
+      </h3>
+
+      <a href="../static/Project3_Report.pdf" target="_blank" rel="noopener noreferrer">
+        View Full Report
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================== -->
+
+  <script>
+
+    /* =========================================================
+       THEME
+       ========================================================= */
+
+    document.querySelector(".top").insertAdjacentHTML(
+      "beforeend",
+
+      `
+        <label class="color-scheme">
+
+          Theme:
+
+          <select>
+
+            <option value="light dark">
+              Auto
+            </option>
+
+            <option value="light">
+              Light
+            </option>
+
+            <option value="dark">
+              Dark
+            </option>
+
+          </select>
+
+        </label>
+      `
+    );
+
+
+    const themeSelect =
+      document.querySelector(
+        "label.color-scheme > select"
+      );
+
+
+    function applyColorScheme(scheme) {
+
+      let colorScheme = scheme;
+
+      if (scheme === "light dark") {
+
+        const prefersDark =
+          window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+
+        colorScheme =
+          prefersDark
+            ? "dark"
+            : "light";
+      }
+
+
+      document.body.classList.remove(
+        "dark-mode",
+        "light-mode"
+      );
+
+
+      document.body.classList.add(
+        `${colorScheme}-mode`
+      );
+
+
+      document.documentElement.style.setProperty(
+        "color-scheme",
+        colorScheme
+      );
+
+    }
+
+
+    const savedPreference =
+      localStorage.getItem(
+        "color-scheme-user-preference"
+      );
+
+
+    if (savedPreference) {
+
+      applyColorScheme(
+        savedPreference
+      );
+
+      themeSelect.value =
+        savedPreference;
+
+    }
+    else {
+
+      applyColorScheme(
+        "light dark"
+      );
+
+    }
+
+
+    themeSelect.addEventListener(
+      "input",
+      event => {
+
+        const scheme =
+          event.target.value;
+
+        applyColorScheme(
+          scheme
+        );
+
+        localStorage.setItem(
+          "color-scheme-user-preference",
+          scheme
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       KEEP THE PAGE TO ONE VIEWPORT
+       On phones and short windows the instructions start
+       collapsed so the chart keeps its room.
+       ========================================================= */
+
+    if (
+      window.matchMedia(
+        "(max-width: 750px), (max-height: 620px)"
+      ).matches
+    ) {
+
+      document
+        .getElementById("instructions")
+        .removeAttribute("open");
+
+    }
+
+
+    /* =========================================================
+       FETCH JSON
+       ========================================================= */
+
+    async function fetchJSON(url) {
+
+      try {
+
+        console.log(
+          "Loading JSON:",
+          url
+        );
+
+
+        const response =
+          await fetch(url);
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `HTTP ${response.status}: ${response.statusText}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "JSON loaded:",
+          data
+        );
+
+
+        return data;
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Error loading JSON:",
+          error
+        );
+
+
+        return [];
+
+      }
+
+    }
+
+
+    /* =========================================================
+       RADAR CONFIGURATION
+       ========================================================= */
+
+    const axes = [
+
+      "Hp",
+      "Hp_Regen",
+      "Mana",
+      "Mana_Regen",
+      "Phy_Damage",
+      "Phy_Defence",
+      "Mag_Defence",
+      "Mov_Speed"
+
+    ];
+
+
+    const levels = 5;
+
+
+    const width = 800;
+    const height = 600;
+    const margin = 90;
+
+
+    const radius =
+      Math.min(
+        width,
+        height
+      ) / 2 - margin;
+
+
+    const colors =
+      d3.schemeTableau10;
+
+
+    const angleSlice =
+      (2 * Math.PI) /
+      axes.length;
+
+
+    const r =
+      d3.scaleLinear()
+        .domain([0, 1])
+        .range([0, radius]);
+
+
+    /* Legend row height (compact so five heroes still fit) */
+
+    const legendRowHeight = 48;
+
+
+    /* =========================================================
+       SELECTED HEROES
+       ========================================================= */
+
+    const selectedHeroes = [];
+
+
+    /* =========================================================
+       CREATE RADAR SVG
+       The width and height attributes are left to CSS so the
+       chart scales to the space available; the viewBox keeps
+       the proportions.
+       ========================================================= */
+
+    const svg =
+      d3.select("#radar")
+        .attr(
+          "viewBox",
+          `0 0 ${width} ${height}`
+        )
+        .attr(
+          "preserveAspectRatio",
+          "xMidYMid meet"
+        );
+
+
+    const g =
+      svg.append("g")
+        .attr(
+          "class",
+          "plot"
+        )
+        .attr(
+          "transform",
+          `translate(
+            ${width / 2},
+            ${height / 2}
+          )`
+        );
+
+
+    /* =========================================================
+       DRAW RADAR GRID
+       ========================================================= */
+
+    function drawRadarCoordinate() {
+
+      /* -------------------------
+         Concentric circles
+         ------------------------- */
+
+      for (
+        let level = 1;
+        level <= levels;
+        level++
+      ) {
+
+        g.append("circle")
+
+          .attr(
+            "class",
+            "grid"
+          )
+
+          .attr(
+            "r",
+            (level / levels) *
+            radius
+          );
+
+      }
+
+
+      /* -------------------------
+         Axis groups
+         ------------------------- */
+
+      const axis =
+        g.selectAll(".axis")
+          .data(axes)
+          .join("g")
+          .attr(
+            "class",
+            "axis"
+          );
+
+
+      /* -------------------------
+         Axis lines
+         ------------------------- */
+
+      axis.append("line")
+
+        .attr("x1", 0)
+        .attr("y1", 0)
+
+        .attr(
+          "x2",
+          (_, i) =>
+            Math.cos(
+              angleSlice * i -
+              Math.PI / 2
+            ) * radius
+        )
+
+        .attr(
+          "y2",
+          (_, i) =>
+            Math.sin(
+              angleSlice * i -
+              Math.PI / 2
+            ) * radius
+        );
+
+
+      /* -------------------------
+         Axis labels
+         ------------------------- */
+
+      axis.append("text")
+
+        .attr(
+          "class",
+          "label"
+        )
+
+        .attr(
+          "x",
+          (_, i) =>
+            Math.cos(
+              angleSlice * i -
+              Math.PI / 2
+            ) * (radius + 45)
+        )
+
+        .attr(
+          "y",
+          (_, i) =>
+            Math.sin(
+              angleSlice * i -
+              Math.PI / 2
+            ) * (radius + 45)
+        )
+
+        .attr(
+          "text-anchor",
+          "middle"
+        )
+
+        .style(
+          "font-size",
+          "15px"
+        )
+
+        .style(
+          "font-weight",
+          "500"
+        )
+
+        .text(
+          d => d
+        );
+
+
+      /* -------------------------
+         Grid value labels
+         ------------------------- */
+
+      g.selectAll(".grid-label")
+
+        .data(
+          d3.range(
+            1,
+            levels + 1
+          )
+        )
+
+        .join("text")
+
+        .attr(
+          "class",
+          "grid-label label"
+        )
+
+        .attr(
+          "x",
+          0
+        )
+
+        .attr(
+          "y",
+          d =>
+            -r(
+              d / levels
+            )
+        )
+
+        .attr(
+          "dy",
+          "-0.4em"
+        )
+
+        .style(
+          "font-size",
+          "11px"
+        )
+
+        .text(
+          d =>
+            (d / levels)
+              .toFixed(1)
+        );
+
+    }
+
+
+    /* =========================================================
+       DRAW RADAR POLYGONS
+       ========================================================= */
+
+    function drawRadar(series) {
+
+      /* Remove previous polygons */
+
+      g.selectAll(
+        ".area, .dot"
+      ).remove();
+
+
+      if (
+        !series ||
+        series.length === 0
+      ) {
+
+        return;
+
+      }
+
+
+      /* -------------------------
+         Radial line generator
+         ------------------------- */
+
+      const radialLine =
+        d3.lineRadial()
+
+          .curve(
+            d3.curveLinearClosed
+          )
+
+          .radius(
+            d => r(d.value)
+          )
+
+          .angle(
+            (_, i) =>
+              i * angleSlice
+          );
+
+
+      /* -------------------------
+         Draw each hero
+         ------------------------- */
+
+      series.forEach(
+        (hero, heroIndex) => {
+
+          const points =
+            axes.map(axis => ({
+
+              axis: axis,
+
+              value:
+                Number(hero[axis]) || 0
+
+            }));
+
+
+          /* ---------------------
+             Polygon
+             --------------------- */
+
+          g.append("path")
+
+            .attr(
+              "class",
+              `area area-${heroIndex}`
+            )
+
+            .attr(
+              "fill",
+              colors[
+              heroIndex %
+              colors.length
+              ]
+            )
+
+            .attr(
+              "fill-opacity",
+              0.3
+            )
+
+            .attr(
+              "stroke",
+              colors[
+              heroIndex %
+              colors.length
+              ]
+            )
+
+            .attr(
+              "stroke-width",
+              2
+            )
+
+            .attr(
+              "d",
+              radialLine(points)
+            )
+
+            .on(
+              "mouseover",
+              () => {
+
+                highlightHero(
+                  heroIndex,
+                  hero
+                );
+
+              }
+            )
+
+            .on(
+              "mouseout",
+              clearHighlight
+            );
+
+
+          /* ---------------------
+             Data point dots
+             --------------------- */
+
+          g.selectAll(
+            `.dot-${heroIndex}`
+          )
+
+            .data(points)
+
+            .join("circle")
+
+            .attr(
+              "class",
+              `dot dot-${heroIndex}`
+            )
+
+            .attr(
+              "r",
+              5
+            )
+
+            .attr(
+              "fill",
+              colors[
+              heroIndex %
+              colors.length
+              ]
+            )
+
+            .attr(
+              "transform",
+              point => {
+
+                const axisIndex =
+                  axes.indexOf(
+                    point.axis
+                  );
+
+
+                const angle =
+                  axisIndex *
+                  angleSlice;
+
+
+                const x =
+                  Math.cos(
+                    angle -
+                    Math.PI / 2
+                  ) *
+                  r(point.value);
+
+
+                const y =
+                  Math.sin(
+                    angle -
+                    Math.PI / 2
+                  ) *
+                  r(point.value);
+
+
+                return `
+                  translate(
+                    ${x},
+                    ${y}
+                  )
+                `;
+
+              }
+            );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       DRAW LEGEND
+       ========================================================= */
+
+    function drawLegend(series) {
+
+      const legend =
+        d3.select(
+          "#legend-container"
+        );
+
+
+      legend
+        .selectAll("*")
+        .remove();
+
+
+      if (
+        !series ||
+        series.length === 0
+      ) {
+
+        return;
+
+      }
+
+
+      legend
+        .attr(
+          "width",
+          220
+        )
+
+        .attr(
+          "height",
+          series.length *
+          legendRowHeight + 10
+        );
+
+
+      series.forEach(
+        (hero, heroIndex) => {
+
+          const row =
+            legend.append("g")
+
+              .attr(
+                "class",
+                `legend-item legend-item-${heroIndex}`
+              )
+
+              .attr(
+                "transform",
+                `translate(
+                  5,
+                  ${heroIndex * legendRowHeight + 10}
+                )`
+              )
+
+              .on(
+                "mouseover",
+                () => {
+
+                  highlightHero(
+                    heroIndex,
+                    hero
+                  );
+
+                }
+              )
+
+              .on(
+                "mouseout",
+                clearHighlight
+              );
+
+
+          /* Color swatch */
+
+          row.append("rect")
+
+            .attr(
+              "width",
+              25
+            )
+
+            .attr(
+              "height",
+              25
+            )
+
+            .attr(
+              "rx",
+              4
+            )
+
+            .attr(
+              "fill",
+              colors[
+              heroIndex %
+              colors.length
+              ]
+            );
+
+
+          /* Hero name */
+
+          row.append("text")
+
+            .attr("x", 36)
+            .attr("y", 11)
+
+            .style("font-size", "14px")
+            .style("font-weight", "500")
+
+            .text(hero.Name);
+
+
+          /* Hero role (second line) */
+
+          row.append("text")
+
+            .attr("class", "legend-role")
+            .attr("x", 36)
+            .attr("y", 25)
+
+            .style("font-size", "12px")
+
+            .text(hero.Role);
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       HIGHLIGHT HERO
+       ========================================================= */
+
+    function highlightHero(
+      selectedIndex,
+      hero
+    ) {
+
+      /* Dim all polygons */
+
+      g.selectAll(
+        "path.area"
+      )
+
+        .attr(
+          "fill-opacity",
+          0.05
+        )
+
+        .attr(
+          "stroke-width",
+          1.5
+        );
+
+
+      /* Highlight selected polygon */
+
+      g.select(
+        `path.area-${selectedIndex}`
+      )
+
+        .attr(
+          "fill-opacity",
+          0.85
+        )
+
+        .attr(
+          "stroke-width",
+          3
+        );
+
+
+      /* Dim legend text */
+
+      d3.select(
+        "#legend-container"
+      )
+
+        .selectAll(
+          ".legend-item text"
+        )
+
+        .style(
+          "opacity",
+          0.35
+        )
+
+        .style(
+          "font-weight",
+          "500"
+        );
+
+
+      /* Highlight selected legend */
+
+      d3.select(
+        "#legend-container"
+      )
+
+        .select(
+          `.legend-item-${selectedIndex} text`
+        )
+
+        .style(
+          "opacity",
+          1
+        )
+
+        .style(
+          "font-weight",
+          "700"
+        );
+
+
+      /* Show stats */
+
+      showHeroStats(
+        selectedIndex,
+        hero
+      );
+
+    }
+
+
+    /* =========================================================
+       SHOW HERO STATS
+       ========================================================= */
+
+    function showHeroStats(
+      selectedIndex,
+      hero
+    ) {
+
+      const panel =
+        d3.select(
+          "#stats-panel"
+        );
+
+
+      if (!hero) {
+
+        panel.html("");
+
+        return;
+
+      }
+
+
+      const heroColor =
+        colors[
+        selectedIndex %
+        colors.length
+        ];
+
+
+      panel.html(`
+
+        <div
+          class="stat-card"
+          style="border-left-color: ${heroColor};"
+        >
+
+          <h2
+            style="
+              color: ${heroColor};
+            "
+          >
+            ${hero.Name}
+          </h2>
+
+
+          <p class="stat-role">
+            ${hero.Primary_Role}
+          </p>
+
+
+          <table>
+
+            ${axes.map(axis => `
+
+              <tr>
+
+                <td>
+                  ${axis}
+                </td>
+
+                <td
+                  style="
+                    text-align: right;
+                    font-weight: 600;
+                  "
+                >
+                  ${hero[axis]}
+                </td>
+
+              </tr>
+
+            `).join("")}
+
+
+            <tr>
+
+              <td
+                style="
+                  color: ${heroColor};
+                  font-weight: 600;
+                "
+              >
+                Win Rate
+              </td>
+
+              <td
+                style="
+                  text-align: right;
+                  color: ${heroColor};
+                  font-weight: 700;
+                "
+              >
+                ${Number.isFinite(
+        Number(hero.win_ratio)
+      )
+          ? Math.round(
+            Number(hero.win_ratio) * 100
+          ) + "%"
+          : "N/A"
+        }
+              </td>
+
+            </tr>
+
+
+            <tr>
+
+              <td>
+                Release Year
+              </td>
+
+              <td
+                style="
+                  text-align: right;
+                  font-weight: 600;
+                "
+              >
+                ${hero.release_year ??
+        "N/A"
+        }
+              </td>
+
+            </tr>
+
+          </table>
+
+        </div>
+
+      `);
+
+    }
+
+
+    /* =========================================================
+       CLEAR HIGHLIGHT
+       ========================================================= */
+
+    function clearHighlight() {
+
+      g.selectAll(
+        "path.area"
+      )
+
+        .attr(
+          "fill-opacity",
+          0.3
+        )
+
+        .attr(
+          "stroke-width",
+          2
+        );
+
+
+      d3.select(
+        "#legend-container"
+      )
+
+        .selectAll(
+          ".legend-item text"
+        )
+
+        .style(
+          "opacity",
+          1
+        )
+
+        .style(
+          "font-weight",
+          "500"
+        );
+
+
+      d3.select(
+        "#stats-panel"
+      ).html(`
+
+        <p>
+          Hover over a hero on the radar chart
+          or legend to view detailed statistics.
+        </p>
+
+      `);
+
+    }
+
+
+    /* =========================================================
+       CREATE HERO DROPDOWNS
+       ========================================================= */
+
+    function createHeroSelectors(
+      data,
+      onSelect
+    ) {
+
+      const container =
+        d3.select(
+          ".search-container"
+        );
+
+
+      /* Create five dropdowns */
+
+      for (
+        let i = 0;
+        i < 5;
+        i++
+      ) {
+
+        container
+          .append("select")
+
+          .attr(
+            "class",
+            "hero-select"
+          )
+
+          .attr(
+            "id",
+            `hero-${i}`
+          )
+
+          .on(
+            "change",
+            function () {
+
+              const name =
+                this.value;
+
+
+              /* Empty selection */
+
+              if (!name) {
+
+                selectedHeroes[i] =
+                  null;
+
+              }
+
+              /* Selected hero */
+
+              else {
+
+                selectedHeroes[i] =
+                  data.find(
+                    hero =>
+                      hero.Name === name
+                  );
+
+              }
+
+
+              updateDropdowns();
+
+
+              onSelect(
+                selectedHeroes
+                  .filter(Boolean)
+              );
+
+            }
+          );
+
+      }
+
+
+      /* -------------------------------------------------------
+         Update dropdown options
+         ------------------------------------------------------- */
+
+      function updateDropdowns() {
+
+        const chosenNames =
+          selectedHeroes
+            .filter(Boolean)
+            .map(
+              hero => hero.Name
+            );
+
+
+        container
+          .selectAll(
+            ".hero-select"
+          )
+
+          .each(
+            function (_, index) {
+
+              const select =
+                d3.select(this);
+
+
+              const currentHero =
+                selectedHeroes[index];
+
+
+              /* Remove old options */
+
+              select
+                .selectAll("option")
+                .remove();
+
+
+              /* Placeholder */
+
+              select
+                .append("option")
+
+                .attr(
+                  "value",
+                  ""
+                )
+
+                .text(
+                  "-- Select Hero --"
+                );
+
+
+              /* Hero options */
+
+              data.forEach(
+                hero => {
+
+                  const alreadyChosen =
+                    chosenNames.includes(
+                      hero.Name
+                    );
+
+
+                  const isCurrentHero =
+                    currentHero &&
+                    currentHero.Name ===
+                    hero.Name;
+
+
+                  if (
+                    !alreadyChosen ||
+                    isCurrentHero
+                  ) {
+
+                    select
+                      .append("option")
+
+                      .attr(
+                        "value",
+                        hero.Name
+                      )
+
+                      .text(
+                        hero.Name
+                      );
+
+                  }
+
+                }
+              );
+
+
+              /* Restore selection */
+
+              select.property(
+                "value",
+                currentHero
+                  ? currentHero.Name
+                  : ""
+              );
+
+            }
+          );
+
+      }
+
+
+      /* Initial dropdown setup */
+
+      updateDropdowns();
+
+    }
+
+
+    /* =========================================================
+       RESET BUTTON
+       ========================================================= */
+
+    function createResetButton() {
+
+      const container =
+        d3.select(
+          ".search-container"
+        );
+
+
+      container
+
+        .append("button")
+
+        .attr(
+          "id",
+          "reset-btn"
+        )
+
+        .text(
+          "Reset All"
+        )
+
+        .on(
+          "click",
+          () => {
+
+            /* Clear selections */
+
+            selectedHeroes.length = 0;
+
+
+            /* Reset dropdowns */
+
+            d3.selectAll(
+              ".hero-select"
+            )
+
+              .property(
+                "value",
+                ""
+              );
+
+
+            /* Remove polygons */
+
+            g.selectAll(
+              ".area, .dot"
+            ).remove();
+
+
+            /* Remove legend */
+
+            d3.select(
+              "#legend-container"
+            )
+
+              .selectAll("*")
+              .remove();
+
+
+            /* Clear stats */
+
+            d3.select(
+              "#stats-panel"
+            ).html(`
+
+              <p>
+                Hover over a hero on the radar chart
+                or legend to view detailed statistics.
+              </p>
+
+            `);
+
+          }
+        );
+
+    }
+
+
+    /* =========================================================
+       NORMALIZE DATA
+       ========================================================= */
+
+    function normalizeData(data) {
+
+      const maxValues = {};
+
+
+      /* Find maximum for every radar axis */
+
+      axes.forEach(
+        axis => {
+
+          maxValues[axis] =
+            d3.max(
+              data,
+              hero =>
+                Number(hero[axis]) || 0
+            );
+
+        }
+      );
+
+
+      /* Normalize each hero */
+
+      return data.map(
+        hero => {
+
+          const normalized = {
+
+            Name:
+              hero.Name,
+
+            Role:
+              hero.Primary_Role,
+
+            release_year:
+              hero.release_year
+
+          };
+
+
+          axes.forEach(
+            axis => {
+
+              const value =
+                Number(hero[axis]) || 0;
+
+
+              const max =
+                maxValues[axis];
+
+
+              normalized[axis] =
+                max > 0
+                  ? value / max
+                  : 0;
+
+            }
+          );
+
+
+          return normalized;
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       MAIN INITIALIZATION
+       ========================================================= */
+
+    (async function init() {
+
+      console.log(
+        "Initializing MLBB radar chart..."
+      );
+
+
+      /* Load JSON */
+
+      const rawData =
+        await fetchJSON(
+          "../data/heroes.json"
+        );
+
+
+      /* Make sure data loaded */
+
+      if (
+        !Array.isArray(rawData) ||
+        rawData.length === 0
+      ) {
+
+        console.error(
+          "No hero data was loaded."
+        );
+
+
+        d3.select(
+          "#stats-panel"
+        ).html(`
+
+          <p>
+            Unable to load hero data.
+            Check that
+            <strong>
+              ../data/heroes.json
+            </strong>
+            exists and is valid JSON.
+          </p>
+
+        `);
+
+        return;
+
+      }
+
+
+      console.log(
+        `Loaded ${rawData.length} heroes.`
+      );
+
+
+      /* Normalize */
+
+      const normalizedData =
+        normalizeData(
+          rawData
+        );
+
+
+      /* Draw radar background */
+
+      drawRadarCoordinate();
+
+
+      /* Create dropdowns */
+
+      createHeroSelectors(
+        normalizedData,
+
+        selected => {
+
+          drawRadar(
+            selected
+          );
+
+          drawLegend(
+            selected
+          );
+
+        }
+      );
+
+
+      /* Create reset button */
+
+      createResetButton();
+
+
+      console.log(
+        "MLBB radar chart initialized."
+      );
+
+    })();
+
+  </script>
+
+</body>
+
+</html>
