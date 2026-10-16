@@ -139,7 +139,6 @@
       transform: translateY(-1px);
     }
 
-
     /* =========================================================
        RADAR LAYOUT
        One grid row that stretches to fill the remaining height.
@@ -155,7 +154,6 @@
       width: 100%;
       padding-right: 12px;
     }
-
 
     /* =========================================================
        LEGEND
@@ -183,8 +181,6 @@
 
     /* =========================================================
        RADAR SVG
-       The viewBox keeps the aspect ratio, so the chart scales
-       to whatever space the grid cell has.
        ========================================================= */
 
     #radar {
@@ -242,15 +238,11 @@
       background: color-mix(in srgb, Canvas 95%, gray);
     }
 
-    /* Placeholder message shown before any hover */
-
     #stats-panel>p {
       margin: 0;
       padding: 6px 0;
       font-size: 14px;
     }
-
-    /* Hero card: about 23.5em tall, so font-size = panel height / 23.5 */
 
     .stat-card {
       height: 39%;
@@ -287,7 +279,6 @@
     body.dark-mode #stats-panel td:first-child {
       color: #aaa;
     }
-
 
     /* =========================================================
        INSTRUCTIONS / REPORT (compact bottom strip)
@@ -365,16 +356,12 @@
        ========================================================= */
 
     @media (max-width: 1000px) {
-
       .chart-container {
         grid-template-columns: 140px minmax(0, 1fr) 300px;
         gap: 8px;
       }
 
     }
-
-
-    /* Phones: radar on top, legend and stats side by side below it */
 
     @media (max-width: 750px) {
 
@@ -429,26 +416,19 @@
 
 
 <body>
-
   <!-- =======================================================
-       TITLE (theme selector is inserted here by the script)
+       TITLE 
        ======================================================== -->
-
   <header class="top">
-
     <div>
-
       <h1 class="page-title">
         MLBB Hero Radar Chart
       </h1>
-
       <p class="page-description">
         Compare the attributes of up to five Mobile Legends: Bang Bang
         heroes using an interactive radar chart.
       </p>
-
     </div>
-
   </header>
 
 
@@ -457,21 +437,9 @@
        ======================================================== -->
 
   <div class="search-container"></div>
-
-
-  <!-- =======================================================
-       RADAR CHART
-       ======================================================== -->
-
   <div class="chart-container">
-
-    <!-- Legend -->
     <svg id="legend-container"></svg>
-
-    <!-- Radar -->
     <svg id="radar"></svg>
-
-    <!-- Stats -->
     <div id="stats-panel">
       <p>
         Hover over a hero on the radar chart or legend to view
@@ -481,273 +449,108 @@
 
   </div>
 
-
-  <!-- =======================================================
-       INSTRUCTIONS + REPORT
-       ======================================================== -->
-
   <div class="bottom-container">
-
-    <!-- Instructions -->
-
     <details id="instructions" open>
-
       <summary>
         How to use the radar chart
       </summary>
-
       <ul>
-        <li>
-          Use the dropdowns above to select up to five heroes.
-        </li>
-
-        <li>
-          Multiple heroes can be compared at the same time.
-        </li>
-
-        <li>
-          Hover over a radar polygon or legend item to highlight
-          a hero.
-        </li>
-
-        <li>
-          Hovering over a hero displays its detailed attributes,
-          win rate, and release year.
-        </li>
-
-        <li>
-          Click <strong>Reset All</strong> to clear the comparison.
-        </li>
+        <li> Use the dropdowns above to select up to five heroes.</li>
+        <li> Multiple heroes can be compared at the same time.</li>
+        <li> Hover over a radar polygon or legend item to highlight a hero.</li>
+        <li> Hovering over a hero displays its detailed attributes. </li>
+        <li> Click <strong>Reset All</strong> to clear the comparison. </li>
       </ul>
-
     </details>
 
-
-    <!-- Project Report -->
-
     <div id="project-report">
-
-      <h3>
-        Team Project Report
-      </h3>
-
-      <a href="../static/Project3_Report.pdf" target="_blank" rel="noopener noreferrer">
-        View Full Report
-      </a>
-
+      <h3> Team Project Report</h3>
+      <a href="../static/Project3_Report.pdf" target="_blank" rel="noopener noreferrer"> View Full Report</a>
     </div>
-
   </div>
-
-
-  <!-- =======================================================
-       JAVASCRIPT
-       ======================================================== -->
 
   <script>
 
     /* =========================================================
        THEME
        ========================================================= */
-
     document.querySelector(".top").insertAdjacentHTML(
       "beforeend",
-
       `
         <label class="color-scheme">
-
           Theme:
-
           <select>
-
-            <option value="light dark">
-              Auto
-            </option>
-
-            <option value="light">
-              Light
-            </option>
-
-            <option value="dark">
-              Dark
-            </option>
-
+            <option value="light dark"> Auto</option>
+            <option value="light"> Light</option>
+            <option value="dark"> Dark</option>
           </select>
-
         </label>
       `
     );
 
-
-    const themeSelect =
-      document.querySelector(
-        "label.color-scheme > select"
-      );
-
+    const themeSelect = document.querySelector("label.color-scheme > select");
 
     function applyColorScheme(scheme) {
-
       let colorScheme = scheme;
-
       if (scheme === "light dark") {
-
-        const prefersDark =
-          window.matchMedia(
-            "(prefers-color-scheme: dark)"
-          ).matches;
-
-        colorScheme =
-          prefersDark
-            ? "dark"
-            : "light";
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        colorScheme = prefersDark ? "dark" : "light";
       }
-
-
-      document.body.classList.remove(
-        "dark-mode",
-        "light-mode"
-      );
-
-
-      document.body.classList.add(
-        `${colorScheme}-mode`
-      );
-
-
-      document.documentElement.style.setProperty(
-        "color-scheme",
-        colorScheme
-      );
-
+      document.body.classList.remove("dark-mode", "light-mode");
+      document.body.classList.add(`${colorScheme}-mode`);
+      document.documentElement.style.setProperty("color-scheme", colorScheme);
     }
 
-
-    const savedPreference =
-      localStorage.getItem(
-        "color-scheme-user-preference"
-      );
-
+    const savedPreference = localStorage.getItem("color-scheme-user-preference");
 
     if (savedPreference) {
-
-      applyColorScheme(
-        savedPreference
-      );
-
-      themeSelect.value =
-        savedPreference;
-
-    }
-    else {
-
-      applyColorScheme(
-        "light dark"
-      );
-
+      applyColorScheme(savedPreference);
+      themeSelect.value = savedPreference;
+    } else {
+      applyColorScheme("light dark");
     }
 
 
-    themeSelect.addEventListener(
-      "input",
+    themeSelect.addEventListener("input",
       event => {
-
-        const scheme =
-          event.target.value;
-
-        applyColorScheme(
-          scheme
-        );
-
-        localStorage.setItem(
-          "color-scheme-user-preference",
-          scheme
-        );
-
+        const scheme = event.target.value;
+        applyColorScheme(scheme);
+        localStorage.setItem("color-scheme-user-preference", scheme);
       }
     );
-
-
-    /* =========================================================
-       KEEP THE PAGE TO ONE VIEWPORT
-       On phones and short windows the instructions start
-       collapsed so the chart keeps its room.
-       ========================================================= */
-
-    if (
-      window.matchMedia(
-        "(max-width: 750px), (max-height: 620px)"
-      ).matches
+    if (window.matchMedia("(max-width: 750px), (max-height: 620px)").matches
     ) {
-
-      document
-        .getElementById("instructions")
-        .removeAttribute("open");
-
+      document.getElementById("instructions").removeAttribute("open");
     }
-
 
     /* =========================================================
        FETCH JSON
        ========================================================= */
 
     async function fetchJSON(url) {
-
       try {
-
-        console.log(
-          "Loading JSON:",
-          url
-        );
-
-
-        const response =
-          await fetch(url);
-
-
+        console.log("Loading JSON:", url);
+        const response = await fetch(url);
         if (!response.ok) {
-
-          throw new Error(
-            `HTTP ${response.status}: ${response.statusText}`
-          );
-
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-
-
-        const data =
-          await response.json();
-
-
-        console.log(
-          "JSON loaded:",
-          data
-        );
-
-
+        const data = await response.json();
+        console.log("JSON loaded:", data);
         return data;
-
       }
 
       catch (error) {
-
-        console.error(
-          "Error loading JSON:",
-          error
-        );
-
-
+        console.error("Error loading JSON:", error);
         return [];
-
       }
 
     }
-
 
     /* =========================================================
        RADAR CONFIGURATION
        ========================================================= */
 
     const axes = [
-
       "Hp",
       "Hp_Regen",
       "Mana",
@@ -756,149 +559,67 @@
       "Phy_Defence",
       "Mag_Defence",
       "Mov_Speed"
-
     ];
 
-
     const levels = 5;
-
-
     const width = 800;
     const height = 600;
     const margin = 90;
 
 
-    const radius =
-      Math.min(
-        width,
-        height
-      ) / 2 - margin;
-
-
-    const colors =
-      d3.schemeTableau10;
-
-
-    const angleSlice =
-      (2 * Math.PI) /
-      axes.length;
-
-
-    const r =
-      d3.scaleLinear()
-        .domain([0, 1])
-        .range([0, radius]);
-
-
-    /* Legend row height (compact so five heroes still fit) */
-
+    const radius = Math.min(width, height) / 2 - margin;
+    const colors = d3.schemeTableau10;
+    const angleSlice = (2 * Math.PI) / axes.length;
+    const r = d3.scaleLinear().domain([0, 1]).range([0, radius]);
     const legendRowHeight = 48;
-
 
     /* =========================================================
        SELECTED HEROES
        ========================================================= */
-
     const selectedHeroes = [];
-
-
     /* =========================================================
        CREATE RADAR SVG
-       The width and height attributes are left to CSS so the
-       chart scales to the space available; the viewBox keeps
-       the proportions.
        ========================================================= */
 
-    const svg =
-      d3.select("#radar")
-        .attr(
-          "viewBox",
-          `0 0 ${width} ${height}`
-        )
-        .attr(
-          "preserveAspectRatio",
-          "xMidYMid meet"
-        );
+    const svg = d3.select("#radar")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
 
-
-    const g =
-      svg.append("g")
-        .attr(
-          "class",
-          "plot"
-        )
-        .attr(
-          "transform",
-          `translate(
+    const g = svg.append("g")
+      .attr("class", "plot")
+      .attr("transform", `translate(
             ${width / 2},
             ${height / 2}
           )`
-        );
-
+      );
 
     /* =========================================================
        DRAW RADAR GRID
        ========================================================= */
-
     function drawRadarCoordinate() {
-
-      /* -------------------------
-         Concentric circles
-         ------------------------- */
-
-      for (
-        let level = 1;
-        level <= levels;
-        level++
-      ) {
-
+      for (let level = 1; level <= levels; level++) {
         g.append("circle")
-
-          .attr(
-            "class",
-            "grid"
-          )
-
-          .attr(
-            "r",
-            (level / levels) *
-            radius
-          );
-
+          .attr("class", "grid")
+          .attr("r", (level / levels) * radius);
       }
-
 
       /* -------------------------
          Axis groups
          ------------------------- */
-
       const axis =
         g.selectAll(".axis")
           .data(axes)
           .join("g")
-          .attr(
-            "class",
-            "axis"
-          );
-
+          .attr("class", "axis");
 
       /* -------------------------
          Axis lines
          ------------------------- */
-
       axis.append("line")
-
         .attr("x1", 0)
         .attr("y1", 0)
 
-        .attr(
-          "x2",
-          (_, i) =>
-            Math.cos(
-              angleSlice * i -
-              Math.PI / 2
-            ) * radius
-        )
+        .attr("x2", (_, i) => Math.cos(angleSlice * i - Math.PI / 2) * radius)
 
         .attr(
           "y2",

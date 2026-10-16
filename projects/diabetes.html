@@ -41,12 +41,16 @@
     }
 
     section {
-      min-height: 100vh;
-      padding: 12vh 8vw 8vh;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      padding: 11vh 4vw 5vh;
       position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: center
+      justify-content: flex-start;
+      gap: clamp(6px, 1.2vh, 14px);
+      overflow: hidden;
     }
 
     section:nth-of-type(even) {
@@ -63,15 +67,15 @@
     }
 
     h2 {
-      font-size: clamp(30px, 5vw, 60px);
-      margin-bottom: 28px
+      font-size: clamp(26px, 4.2vw, 52px);
+      margin-bottom: 0;          /* gap handles spacing now */
     }
 
     .eyebrow {
       font: 12px "DM Mono", monospace;
       letter-spacing: .2em;
       color: var(--red);
-      margin-bottom: 14px;
+      margin-bottom: 0;
       text-transform: uppercase
     }
 
@@ -83,7 +87,7 @@
     }
 
     p {
-      margin: 0 0 14px;
+      margin: 0 0 8px;
       color: #dbe6f0
     }
 
@@ -130,7 +134,8 @@
       opacity: 0;
       transition: .2s;
       pointer-events: none;
-      text-transform: uppercase
+      text-transform: uppercase;
+      color: white;
     }
 
     nav a:hover span {
@@ -213,7 +218,8 @@
 
     .rv.in {
       opacity: 1;
-      transform: none
+      transform: none;
+      margin-top: 0px;
     }
 
     /* about */
@@ -327,12 +333,12 @@
     /* cleaning */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 5px
     }
 
     .card {
-      padding: 26px;
+      padding: 15px;
       border: 1px solid var(--line);
       border-radius: 20px;
       background: var(--panel)
@@ -346,7 +352,7 @@
     .range {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 5px;
       padding: 9px 0;
       border-bottom: 1px dashed var(--line);
       font-size: 16px
@@ -363,7 +369,7 @@
 
     pre {
       margin: 22px 0 0;
-      padding: 18px;
+      padding: 4px;
       border-radius: 14px;
       background: #08233a;
       overflow: auto;
@@ -381,7 +387,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 18px
+      margin-bottom: 10px
     }
 
     button {
@@ -390,12 +396,14 @@
     }
 
     .tab {
-      padding: 10px 22px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: transparent;
       color: var(--cream);
-      transition: .2s
+      transition: .2s;
+      padding: 6px 12px; font-size: clamp(12px, 1.7vh, 15px); 
+      margin-bottom: 0; 
     }
 
     .tab:hover {
@@ -414,7 +422,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 10px
+      margin-bottom: 0; 
     }
 
     .seg {
@@ -428,7 +436,8 @@
       padding: 8px 18px;
       background: transparent;
       border: 0;
-      color: var(--muted)
+      color: var(--muted);
+      padding: 5px 16px;
     }
 
     .seg button.on {
@@ -453,33 +462,40 @@
     }
 
     .chartbox {
-      padding: 46px 28px 22px;
+      padding: clamp(30px, 5vh, 46px) 24px 14px;  /* top room for the value labels */
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: var(--panel)
+      background: var(--panel);
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;             /* critical: lets it shrink */
+      display: flex;
     }
 
     .chart {
       display: flex;
       justify-content: space-around;
       gap: 24px;
-      min-height: 340px
+      flex: 1;
+      min-height: 0
     }
 
     .grp {
       flex: 1;
       max-width: 260px;
       display: flex;
-      flex-direction: column
+      flex-direction: column;
+      min-height: 0
     }
 
     .bars {
-      height: 300px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       gap: 10px;
-      border-bottom: 2px solid var(--cream)
+      border-bottom: 2px solid var(--cream);
+      flex: 1;                  
+      min-height: 0
     }
 
     .bar {
@@ -519,10 +535,11 @@
 
     .lbl {
       text-align: center;
-      padding-top: 12px;
+      padding-top: 8px;
       font-weight: 600;
       position: relative
     }
+
 
     .lbl small {
       display: block;
@@ -544,12 +561,12 @@
     }
 
     .insight {
-      margin-top: 20px;
-      padding: 18px 24px;
+      margin-top: 0;
+      padding: clamp(8px, 1.4vh, 18px) 22px;
       border-radius: 16px;
       background: rgba(255, 79, 74, .14);
       border: 1px solid rgba(255, 79, 74, .4);
-      font-size: 20px
+      font-size: clamp(14px, 2.3vh, 20px)
     }
 
     .tip {
@@ -564,6 +581,10 @@
       opacity: 0;
       transition: opacity .12s;
       white-space: nowrap
+    }
+
+    @media (max-height: 720px) {
+      .lbl small, .badge { display: none; }
     }
 
     /* conclusions */
@@ -668,10 +689,10 @@
 
 <body>
   <nav id="nav">
-    <a href="#top"><span>Intro</span></a><a href="#about"><span>The data</span></a><a
-      href="#questions"><span>Questions</span></a>
-    <a href="#cleaning"><span>Cleaning</span></a><a href="#analysis"><span>Analysis</span></a><a
-      href="#conclusions"><span>Conclusions</span></a>
+    <a href="#top"><span>Home</span></a>
+    <a href="#about"><span>Data</span></a><a href="#questions"><span>Questions</span></a>
+    <a href="#cleaning"><span>Data Cleaning</span></a>
+    <a href="#analysis"><span>Analysis</span></a><a href="#conclusions"><span>Conclusions</span></a>
   </nav>
 
   <section class="hero" id="top">
@@ -753,14 +774,14 @@
         <div class="range">Fasting Hyperglycemia (126+ mg/dL) <code>1,086</code></div>
       </div>
     </div>
-    <p class="rv" style="margin-top:22px">Some groups have far more data points than others, so each model is
+    <p class="rv" style="margin-top:5px">Some groups have far more data points than others, so each model is
       <strong>weighted</strong> by the inverse of its group size.</p>
     <pre class="rv"><i># weighted linear model for age groups</i>
-weights_age <- 1 / table(diabetes$age.ranges)
-weight_vector_age <- weights_age[diabetes$age.ranges]
-weighted_model_age <- lm(Outcome ~ age.ranges, data = diabetes,
-                         weights = weight_vector_age)
-summary(weighted_model_age)</pre>
+      weights_age <- 1 / table(diabetes$age.ranges)
+      weight_vector_age <- weights_age[diabetes$age.ranges]
+      weighted_model_age <- lm(Outcome ~ age.ranges, data = diabetes, weights = weight_vector_age)
+      summary(weighted_model_age)
+    </pre>
   </section>
 
   <section id="analysis">
@@ -847,7 +868,7 @@ summary(weighted_model_age)</pre>
 
       $('#legend').innerHTML = byRate
         ? '<span><i style="background:#ff4f4a"></i>% with diabetes</span>'
-        : '<span><i style="background:#5aa9ff"></i>Outcome 0 · no diabetes</span><span><i style="background:#ff4f4a"></i>Outcome 1 · diabetes</span>';
+        : '<span><i style="background:#5aa9ff"></i>No Diabetes</span><span><i style="background:#ff4f4a"></i>Diabetes</span>';
       $('#insight').innerHTML = `${d.note} <span class="muted">(${top[0]}: ${rate(top).toFixed(1)}% diabetes rate)</span>`;
     }
 
