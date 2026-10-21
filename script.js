@@ -379,3 +379,18 @@ function spinEarthquakeGlobe(timestamp) {
   );
 }
 
+const workSection = document.querySelector("#work");
+
+if (workSection && "IntersectionObserver" in window) {
+    const workObserver = new IntersectionObserver(
+        ([entry]) => {
+            workSection.classList.toggle(
+                "is-offscreen",
+                !entry.isIntersecting
+            );
+        },
+        { threshold: 0 }
+    );
+
+    workObserver.observe(workSection);
+}

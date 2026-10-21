@@ -59,7 +59,6 @@ body {
   pointer-events: none;
   z-index: 90;
   opacity: .035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
 }
 
 /* =========================
@@ -78,7 +77,6 @@ body {
   align-items: center;
   justify-content: space-between;
   background: var(--nav-bg);
-  backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--line);
   transition: background .35s, border-color .35s;
 }
@@ -472,6 +470,11 @@ html[data-theme="light"] .theme-toggle .moon {
 /* =========================
    WORK
 ========================= */
+#work.is-offscreen .earthquake-globe,
+#work.is-offscreen #portfolioEarthquakeGlobe {
+    animation-play-state: paused !important;
+}
+
 .work {
   background: #0c1420;
 }
@@ -734,6 +737,8 @@ html[data-theme="light"] .theme-toggle .moon {
     height: 80%;
     display: block;
     overflow: visible;
+    pointer-events: none;
+    shape-rendering: optimizeSpeed;
 }
 
 .globe-sphere {
@@ -746,7 +751,6 @@ html[data-theme="light"] .theme-toggle .moon {
     fill: #122235;
     stroke: #54708d;
     stroke-width: .35;
-    opacity: .9;
 }
 
 .globe-quake {

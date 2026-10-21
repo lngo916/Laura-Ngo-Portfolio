@@ -215,10 +215,11 @@
     h2,
     h3 {
       font-family: var(--display);
-      font-weight: 400;
+      font-weight: 600;
       margin: 0;
       text-wrap: balance;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.001em;
+      line-height: 0.95;
     }
 
     h1 {
@@ -261,7 +262,7 @@
 
     /* pages */
     .page {
-      padding-block: 15px 32px;
+      padding-block: 15px 40px;
       display: flex;
       flex-direction: column;
       gap: 15px;
@@ -293,10 +294,14 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      font-weight: 900;
+      font-size: clamp(3rem, 9vw, 6.25rem);
     }
 
     .page-head p {
       margin-bottom: 2px;
+      font-weight: 500;
+      font-size: clamp(3rem, 9vw, 6.25rem);
     }
 
     /* placeholders and uploads */
@@ -724,8 +729,8 @@
       position: relative;
       display: flex;
       justify-content: space-between;
-      padding-block: 20px 8px;
-      min-width: 860px;
+      padding-block: 30px 8px;
+      min-width: 960px;
     }
 
     .tl-track::before {
@@ -824,7 +829,7 @@
 
     .wide-text p {
       max-width: none;
-      font-size: 0.8rem;
+      font-size: 1rem;
       margin-top: 0px;
     }
 
@@ -1058,6 +1063,123 @@
         transition: none !important;
       }
     }
+
+    /* ==========================================================
+       ONE-VIEWPORT LAYOUT for every page except Home
+       Desktop and tablet landscape only. Phones and very short
+       windows keep the normal scrolling layout.
+       ========================================================== */
+    @media (min-width: 901px) and (min-height: 600px) {
+
+      .shell { min-height: 100svh; display: flex; flex-direction: column; }
+      main.wrap { width: 100%; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+      /* compact footer (not on Home) */
+      body:not(:has([data-page="home"]:not([hidden]))) .foot { padding-block: 0 clamp(8px, 1.6vh, 16px); }
+      body:not(:has([data-page="home"]:not([hidden]))) .foot .panel { padding: 10px 18px; }
+      body:not(:has([data-page="home"]:not([hidden]))) .foot p { font-size: 0.78rem; line-height: 1.4; }
+
+      /* shared compact scale */
+      .page:not([data-page="home"]) {
+        flex: 1;
+        padding-block: 0 clamp(8px, 1.4vh, 14px);
+        gap: clamp(8px, 1.8vh, 16px);
+      }
+      .page:not([data-page="home"]) .block { gap: clamp(6px, 1.2vh, 12px); }
+      .page:not([data-page="home"]) h1 { font-size: clamp(1.9rem, 5.4vh, 3.1rem); line-height: 1; }
+      .page:not([data-page="home"]) h2 { font-size: clamp(1.3rem, 3.3vh, 1.9rem); }
+      .page:not([data-page="home"]) h3 { font-size: clamp(1.1rem, 2.6vh, 1.45rem); }
+      .page:not([data-page="home"]) p,
+      .page:not([data-page="home"]) .caption { font-size: clamp(0.8rem, 1.9vh, 0.95rem); line-height: 1.45; }
+      .page:not([data-page="home"]) .btn { padding: 8px 18px; font-size: 0.88rem; }
+      .page:not([data-page="home"]) .ph { aspect-ratio: auto !important; align-self: start; }
+
+      /* ---------- TIMELINE (fills one viewport, larger type) ---------- */
+      .page[data-page="timeline"] { gap: clamp(10px, 2vh, 20px); }
+      .wrap .page[data-page="timeline"] h1 { font-size: clamp(2rem, 5.8vh, 3.6rem); }
+      .wrap .page[data-page="timeline"] .wide-text p { font-size: clamp(0.95rem, 2.1vh, 1.15rem); line-height: 1.45; }
+      .page[data-page="timeline"] .panel {
+        flex: 1; min-height: 0; display: flex; flex-direction: column;
+        padding: clamp(14px, 2.4vh, 32px) clamp(18px, 2.4vw, 32px);
+      }
+      .page[data-page="timeline"] .tl-scroll { padding-bottom: 6px; }
+      .tl-track { padding-block: 16px 6px; }
+      .tl-track::before, .tl-fill { top: 33px; }
+      .tl-dot { font-size: 1rem; }
+      .tl-dot i { width: 36px; height: 36px; }
+      .tl-detail { flex: 1; min-height: 0; margin-top: clamp(10px, 2.2vh, 28px); gap: clamp(4px, 1.1vh, 12px); }
+      .tl-year { font-size: clamp(3rem, 10vh, 6rem); line-height: 0.85; }
+      .wrap .page[data-page="timeline"] .label { font-size: 0.9rem; }
+      .tl-detail h3 { font-size: clamp(1.5rem, 4.2vh, 2.6rem); }
+      .wrap .page[data-page="timeline"] #tlBody { font-size: clamp(1rem, 2.35vh, 1.4rem); line-height: 1.45; }
+      .tl-controls { margin-top: auto; padding-top: clamp(6px, 1.2vh, 14px); }
+      .wrap .page[data-page="timeline"] .btn { padding: clamp(8px, 1.4vh, 12px) 24px; font-size: 1rem; }
+
+      /* ---------- NARRATIVE: three columns ---------- */
+      .page[data-page="narrative"] {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: auto auto 1fr;
+        column-gap: clamp(16px, 2.4vw, 32px);
+        row-gap: clamp(10px, 2vh, 18px);
+        align-content: start;
+      }
+      .page[data-page="narrative"] > .page-head { grid-column: 1 / -1; }
+      .page[data-page="narrative"] > :nth-child(2) { grid-column: 1; grid-row: 2; }
+      .page[data-page="narrative"] > :nth-child(3) { grid-column: 1; grid-row: 3; height: clamp(90px, 26vh, 240px); }
+      .page[data-page="narrative"] > :nth-child(4) { grid-column: 2; grid-row: 2; }
+      .page[data-page="narrative"] > :nth-child(5) { grid-column: 2; grid-row: 3; height: clamp(90px, 26vh, 240px); }
+      .page[data-page="narrative"] > :nth-child(6) { grid-column: 3; grid-row: 2 / span 2; }
+
+      /* ---------- DATA ---------- */
+      .page[data-page="data"] { gap: clamp(6px, 1.2vh, 14px); }
+      .page[data-page="data"] .ph { height: clamp(60px, 13vh, 150px); }
+      .page[data-page="data"] .rq-grid { gap: clamp(12px, 2vw, 24px); }
+      .page[data-page="data"] .chart { gap: 6px; }
+      .page[data-page="data"] .chart-title { font-size: clamp(0.8rem, 1.8vh, 0.95rem); }
+      .page[data-page="data"] .chart-plot { gap: clamp(3px, 0.7vh, 6px); }
+      .page[data-page="data"] .c-track { height: clamp(11px, 2vh, 18px); }
+      .page[data-page="data"] .c-label,
+      .page[data-page="data"] .c-val,
+      .page[data-page="data"] .c-axis span,
+      .page[data-page="data"] .c-axis-title { font-size: clamp(0.68rem, 1.5vh, 0.78rem); }
+      .page[data-page="data"] .tree { aspect-ratio: auto; height: clamp(150px, 27vh, 280px); }
+
+      .page[data-page="data"] > .block:nth-child(3) {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        column-gap: clamp(12px, 2vw, 24px);
+        row-gap: clamp(6px, 1.2vh, 12px);
+        align-items: start;
+      }
+      .page[data-page="data"] > .block:nth-child(3) > h2 { grid-column: 1 / -1; }
+      .page[data-page="data"] > .block:nth-child(3) > .two { display: contents; }
+      .page[data-page="data"] > .block:nth-child(3) > .two:nth-of-type(1) > .block { grid-column: 1; grid-row: 2 / span 2; }
+      .page[data-page="data"] > .block:nth-child(3) > .two:nth-of-type(1) > .fig   { grid-column: 2; grid-row: 2; }
+      .page[data-page="data"] > .block:nth-child(3) > .two:nth-of-type(2) > .fig   { grid-column: 3; grid-row: 2; }
+      .page[data-page="data"] > .block:nth-child(3) > .two:nth-of-type(2) > .block { grid-column: 2 / span 2; grid-row: 3; }
+      .page[data-page="data"] .fig { gap: 6px; }
+      .page[data-page="data"] .map { max-height: clamp(90px, 16vh, 180px); }
+      .page[data-page="data"] .map-note { min-height: 0; font-size: 0.82rem; }
+      .page[data-page="data"] .panel { padding: 12px 16px !important; gap: 8px !important; }
+      .page[data-page="data"] details { padding-top: 8px; }
+      .page[data-page="data"] summary { font-size: 0.88rem; }
+      .page[data-page="data"] details > div { padding-top: 6px; font-size: 0.82rem; line-height: 1.4; }
+
+      /* ---------- ABOUT ---------- */
+      .team { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1.6vh, 14px) clamp(10px, 1.6vw, 16px); }
+      .member { padding: clamp(12px, 2vh, 20px) 18px; border-radius: 16px; }
+      .member h3 { font-size: clamp(1.1rem, 2.6vh, 1.35rem); }
+      .member .role { margin-bottom: 6px; }
+      .member p { font-size: clamp(0.8rem, 1.8vh, 0.9rem); line-height: 1.4; }
+
+      /* ---------- SOURCES ---------- */
+      .biblio .panel { padding: 16px 20px; }
+      .biblio ol { gap: 12px; max-height: clamp(200px, 56vh, 620px); overflow-y: auto; padding-right: 6px; }
+      .biblio li { padding-bottom: 12px; font-size: clamp(0.9rem, 2vh, 1.05rem); }
+      .add { margin-top: 12px; }
+      .add input { padding: 9px 16px; font-size: 0.88rem; }
+    }
   </style>
 
   <div class="field" aria-hidden="true"></div>
@@ -1072,10 +1194,9 @@
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#timeline">Timeline</a></li>
-            <li><a href="#narrative">Narrative</a></li>
             <li><a href="#data">Data</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#discussion">Discussion</a></li>
+            <li><a href="#sources">Sources</a></li>
           </ul>
         </nav>
       </div>
@@ -1115,6 +1236,58 @@
             <article class="panel rq">
               <h3 data-edit>How does intimate partner violence vary in prevalence and reporting across different
                 cultural and socio-economic contexts? What factors influence these variations?</h3>
+            </article>
+            <article class="panel rq">
+              <h3 data-edit>How has the rate of IPV fluctuated over the years? Could external global factors contribute
+                to the percentage of women who experience IPV?</h3>
+            </article>
+          </div>
+          <a class="btn" href="#timeline" style="margin-top:8px">View the full project →</a>
+        </div>
+      </section>
+
+      <!-- TIMELINE -->
+      <section class="page" data-page="timeline" hidden>
+        <div class="page-head">
+          <h1>Historical Timeline (1962 - 2019)</h1>
+        </div>
+
+        <div class="block wide-text">
+          <p data-edit>Although there have been records of response to domestic violence dating back to the early
+            1500's, we will discuss signficant events dating from 1962 to 2019. Reading across the timeline, the
+            expansion from local crisis lines and
+            shelters in the 1970s, to court rulings and state laws in the 1980s and 1990s, to national legislation that
+            is renewed over time.</p>
+        </div>
+        <div class="panel" id="tl" aria-live="polite">
+          <div class="tl-scroll" id="tlScroll">
+            <div class="tl-track" id="tlTrack" role="group" aria-label="Milestones">
+              <div class="tl-fill" id="tlFill"></div>
+            </div>
+          </div>
+          <div class="tl-detail">
+            <div class="tl-year" id="tlYear"></div>
+            <p class="label" id="tlPlace"></p>
+            <h3 id="tlTitle"></h3>
+            <p id="tlBody"></p>
+          </div>
+          <div class="tl-controls">
+            <button class="btn ghost" id="tlPrev" type="button">← Earlier</button>
+            <button class="btn" id="tlNext" type="button">Later →</button>
+          </div>
+        </div>
+      </section>
+  
+      <!-- DATA -->
+      <section class="page" data-page="data" hidden>
+        <div class="page-head">
+          <h1>the data.</h1>
+        </div>
+
+        <div class="block">
+          <h2>datasets.</h2>
+          <div class="rq-grid">
+            <article class="panel rq">
               <figure class="chart" id="ipvChart"
                 aria-label="Bar chart of the proportion of women who have ever experienced intimate partner violence, by region and income group">
                 <figcaption class="chart-title">Proportion of women who have ever experienced intimate partner violence
@@ -1148,8 +1321,6 @@
               </details>
             </article>
             <article class="panel rq">
-              <h3 data-edit>How has the rate of IPV fluctuated over the years? Could external global factors contribute
-                to the percentage of women who experience IPV?</h3>
               <figure class="chart" id="treeChart"
                 aria-label="Treemap of women whose first experience of spousal violence was within ten years of marriage, by year">
                 <figcaption class="chart-title">Percentage of women whose first experience of spousal physical or sexual
@@ -1169,97 +1340,6 @@
                 </div>
               </details>
             </article>
-
-          </div>
-          <a class="btn" href="#timeline" style="margin-top:8px">View the full project →</a>
-        </div>
-      </section>
-
-      <!-- TIMELINE -->
-      <section class="page" data-page="timeline" hidden>
-        <div class="page-head">
-          <h1>Historical Timeline (1962 - 2019)</h1>
-        </div>
-
-        <div class="block wide-text">
-          <p data-edit>Although there have been records of response to domestic violence dating back to the early
-            1500's, we will discuss signficant events dating from 1962 to 2019. Reading across the timeline, the
-            expansion from local crisis lines and
-            shelters in the 1970s, to court rulings and state laws in the 1980s and 1990s, to national legislation that
-            is renewed over time. (make smaller) </p>
-        </div>
-        <div class="panel" id="tl" aria-live="polite">
-          <div class="tl-scroll" id="tlScroll">
-            <div class="tl-track" id="tlTrack" role="group" aria-label="Milestones">
-              <div class="tl-fill" id="tlFill"></div>
-            </div>
-          </div>
-          <div class="tl-detail">
-            <div class="tl-year" id="tlYear"></div>
-            <p class="label" id="tlPlace"></p>
-            <h3 id="tlTitle"></h3>
-            <p id="tlBody"></p>
-          </div>
-          <div class="tl-controls">
-            <button class="btn ghost" id="tlPrev" type="button">← Earlier</button>
-            <button class="btn" id="tlNext" type="button">Later →</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- NARRATIVE -->
-      <section class="page" data-page="narrative" hidden>
-        <div class="page-head">
-          <h1>Research Motivations</h1>
-        </div>
-
-        <div class="block">
-          <h2>introduction.</h2>
-          <p data-edit>Start with the question that brought the group to this topic. Say what IPV is, why measuring it
-            is hard, and what readers will find in the pages that follow.</p>
-          <p data-edit>Explain your approach in two or three sentences: which datasets you chose, why, and how you read
-            them.</p>
-        </div>
-        <div class="ph" data-label="Add banner image" style="--ratio:4/1"></div>
-
-        <div class="block">
-          <h2>analysis.</h2>
-          <p data-edit>Walk through what the data shows. Take one finding at a time, state it plainly, and point to the
-            figure on the Data page that supports it.</p>
-          <p data-edit>Then say what the finding does not show. A number about reported cases describes reporting, not
-            everything that happened.</p>
-        </div>
-        <div class="ph" data-label="Add banner image" style="--ratio:4/1"></div>
-
-        <div class="block">
-          <h2>conclusion.</h2>
-          <p data-edit>Return to the research questions and answer each one briefly. Close with what you would want a
-            reader to remember, and what better data would look like.</p>
-          <a class="btn" href="#discussion">Continue to discussion →</a>
-        </div>
-      </section>
-
-      <!-- DATA -->
-      <section class="page" data-page="data" hidden>
-        <div class="page-head">
-          <h1>the data.</h1>
-        </div>
-
-        <div class="block">
-          <h2>datasets.</h2>
-          <div class="two">
-            <figure class="fig" style="margin:0">
-              <div class="ph" data-label="Add chart or image" style="--ratio:4/3"></div>
-              <h3 data-edit>dataset one.</h3>
-              <figcaption class="caption" data-edit>Figure 1. Describe what this chart shows, the years covered, and the
-                source.</figcaption>
-            </figure>
-            <figure class="fig" style="margin:0">
-              <div class="ph" data-label="Add chart or image" style="--ratio:4/3"></div>
-              <h3 data-edit>dataset two.</h3>
-              <figcaption class="caption" data-edit>Figure 2. Describe what this chart shows, the years covered, and the
-                source.</figcaption>
-            </figure>
           </div>
         </div>
 
@@ -1347,20 +1427,12 @@
         </div>
       </section>
 
-      <!-- DISCUSSION -->
-      <section class="page" data-page="discussion" hidden>
+      <!-- SOURCES -->
+      <section class="page" data-page="sources" hidden>
         <div class="page-head">
-          <h1>discussion.</h1>
+          <h1>sources.</h1>
         </div>
-        <div class="block">
-          <h2>overview.</h2>
-          <p data-edit>Reflect on the whole project. What surprised you? Which question could you answer, and which
-            could the data not answer? What would you collect next, and how would you do it with care for the people it
-            describes?</p>
-        </div>
-        <div class="ph" data-label="Add image" style="--ratio:3/1"></div>
         <div class="block biblio">
-          <h2>bibliography.</h2>
           <div class="panel">
             <ol id="bibList"></ol>
             <form class="add" id="bibForm">
@@ -1388,11 +1460,12 @@
 
   <script>
     (function () {
-      var PAGES = ['home', 'timeline', 'narrative', 'data', 'about', 'discussion'];
+      var PAGES = ['home', 'timeline', 'narrative', 'data', 'about', 'sources'];
 
       /* routing */
       function route(forced) {
         var id = forced || location.hash.slice(1);
+        if (id === 'discussion') id = 'sources'; /* old links */
         if (PAGES.indexOf(id) < 0) id = 'home';
         document.querySelectorAll('[data-page]').forEach(function (s) { s.hidden = s.dataset.page !== id; });
         document.querySelectorAll('nav a').forEach(function (a) {
